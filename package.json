@@ -8,7 +8,8 @@
     "start": "next start",
     "deploy": "npm run build && npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main",
     "images": "node --env-file-if-exists=.env scripts/images.mjs",
-    "videos": "node --env-file-if-exists=.env scripts/videos.mjs"
+    "videos": "node --env-file-if-exists=.env scripts/videos.mjs",
+    "r2:upload": "node --env-file-if-exists=.env scripts/r2-upload.mjs"
   },
   "dependencies": {
     "@types/node": "^26.6.5",
@@ -17,5 +18,8 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1157.0"
   }
 }

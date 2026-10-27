@@ -1,6 +1,6 @@
 import posts from '@/data/posts.json'
 import categories from '@/data/categories.json'
-import { WP_URL } from './site'
+import { MEDIA_URL, WP_URL } from './site'
 
 export type Post = (typeof posts)[number]
 
@@ -12,21 +12,26 @@ export const decode = (s: string) =>
   })
 
 export const strip = (s: string) => decode(s.replace(/<[^>]+>/g, '')).trim()
-// WP returns non-Latin slugs percent-encoded; routes need the decoded form.
 // Pharmacy spam someone injected into the old WordPress posts (ihthikaf-2, optional-fasting).
 // Applied here, not in data/*.json, so it survives re-running `npm run fetch`.
 const SPAM = /<p[^>]*>(?:(?!<\/p>)[\s\S])*href="https?:\/\/(?:www\.)?(?:danmark-aptk\.com|farmacija-ed\.com)[\s\S]*?<\/p>/g
+// Post images live under /uploads; with NEXT_PUBLIC_MEDIA_URL set they are served from R2 instead.
+const media = (s: string) => (MEDIA_URL ? s.replace(/(^|["'\s,(])\/uploads\//g, `$1${MEDIA_URL}/uploads/`) : s)
+
 const cleanContent = (html: string) =>
-  html
-    .replace(SPAM, '')
-    .replace(/<div id="[A-Za-z]{8,}">\s*<\/div>/g, '') // wrapper the spam was injected into
-    .replaceAll(`${WP_URL}/`, '/') // links to the old WordPress origin become site-relative
+  media(
+    html
+      .replace(SPAM, '')
+      .replace(/<div id="[A-Za-z]{8,}">\s*<\/div>/g, '') // wrapper the spam was injected into
+      .replaceAll(`${WP_URL}/`, '/'), // links to the old WordPress origin become site-relative
+  )
 
 export const allPosts: Post[] = posts.map((p) => {
   const content = cleanContent(p.content)
   // WP auto-excerpts of the spammed posts contain the spam text too, so rebuild them from the clean body.
   const excerpt = new RegExp(SPAM.source).test(p.content) ? `<p>${strip(content).slice(0, 200)}</p>` : p.excerpt
-  return { ...p, slug: decodeURIComponent(p.slug), content, excerpt }
+  // WP returns non-Latin slugs percent-encoded; routes need the decoded form.
+  return { ...p, slug: decodeURIComponent(p.slug), content, excerpt, image: p.image && media(p.image) }
 })
 export const allCategories = categories.map((c) => ({ ...c, name: decode(c.name) }))
 export const categoryBySlug = (slug: string) => allCategories.find((c) => c.slug === slug)
