@@ -1,0 +1,62 @@
+[
+ {
+  "id": 1,
+  "count": 31,
+  "name": "Articles",
+  "slug": "articles"
+ },
+ {
+  "id": 6,
+  "count": 21,
+  "name": "Columns",
+  "slug": "columns"
+ },
+ {
+  "id": 5,
+  "count": 16,
+  "name": "Features",
+  "slug": "features"
+ },
+ {
+  "id": 291,
+  "count": 15,
+  "name": "Fiqh - Q&amp;A",
+  "slug": "fiqh-qa"
+ },
+ {
+  "id": 7,
+  "count": 46,
+  "name": "Fiqh-Fatwa",
+  "slug": "fiqh-fatwa"
+ },
+ {
+  "id": 285,
+  "count": 61,
+  "name": "Naseehat",
+  "slug": "naseehat"
+ },
+ {
+  "id": 243,
+  "count": 36,
+  "name": "Quran-Hadith",
+  "slug": "quran-hadith"
+ },
+ {
+  "id": 8,
+  "count": 3,
+  "name": "Quthuba Synopsis",
+  "slug": "quthuba-synopsis"
+ },
+ {
+  "id": 9,
+  "count": 19,
+  "name": "Videos",
+  "slug": "videos"
+ },
+ {
+  "id": 168,
+  "count": 7,
+  "name": "Zakat",
+  "slug": "zakat"
+ }
+]

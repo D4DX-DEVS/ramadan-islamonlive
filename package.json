@@ -1,0 +1,21 @@
+{
+  "name": "ramadan",
+  "private": true,
+  "scripts": {
+    "fetch": "node --env-file-if-exists=.env scripts/fetch.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "deploy": "npm run build && npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main",
+    "images": "node --env-file-if-exists=.env scripts/images.mjs",
+    "videos": "node --env-file-if-exists=.env scripts/videos.mjs"
+  },
+  "dependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "next": "^16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^7.0.2"
+  }
+}
