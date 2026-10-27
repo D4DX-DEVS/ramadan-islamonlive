@@ -7,8 +7,15 @@ const ORIGIN = process.env.WP_URL || 'https://ramadan.islamonlive.in'
 const RE = new RegExp(ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '/wp-content/uploads/[^\\s"\'<>,)]+', 'g')
 
 const raw = readFileSync('data/posts.json', 'utf8')
-const urls = [...new Set(raw.replace(/\\\//g, '/').match(RE) ?? [])]
-console.log(urls.length, 'images')
+// Also keep the rest of the media library (logos, theme assets, fonts) so nothing is left behind on the old site.
+const library = []
+for (let page = 1; ; page++) {
+  const r = await fetch(`${ORIGIN}/wp-json/wp/v2/media?per_page=100&page=${page}&_fields=source_url`)
+  library.push(...(await r.json()).map((m) => m.source_url))
+  if (page >= +r.headers.get('x-wp-totalpages')) break
+}
+const urls = [...new Set([...(raw.replace(/\\\//g, '/').match(RE) ?? []), ...library])]
+console.log(urls.length, 'files')
 
 async function save(url) {
   const path = 'public' + decodeURIComponent(new URL(url).pathname.replace('/wp-content', ''))
@@ -18,8 +25,8 @@ async function save(url) {
   for (let i = 0; i < 4; i++) {
     try {
       let r
-      // WP answers some bad filenames with a 200 HTML "not found" page, so require an image content type.
-      const isImage = (res) => res.ok && (res.headers.get('content-type') ?? '').startsWith('image/')
+      // WP answers some bad filenames with a 200 HTML "not found" page, so reject HTML (the library also has fonts).
+      const isImage = (res) => res.ok && !(res.headers.get('content-type') ?? '').startsWith('text/html')
       for (const v of variants) if (isImage((r = await fetch(encodeURI(v), { signal: AbortSignal.timeout(60000) })))) break
       if (!isImage(r)) break
       mkdirSync(dirname(path), { recursive: true })

@@ -1,0 +1,11 @@
+
+---Downloaded files---
+The import files for: Gadget Demo were successfully downloaded!
+Initial max execution time = 300
+Files info:
+Site URL = https://ramadan.islamonlive.in
+Data file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-content-import-file_2022-03-22__03-53-36.xml
+Widget file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-widgets-import-file_2022-03-22__03-53-36.json
+Customizer file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-customizer-import-file_2022-03-22__03-53-36.dat
+Redux files:
+not defined!

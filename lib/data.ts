@@ -1,5 +1,8 @@
 import posts from '@/data/posts.json'
 import categories from '@/data/categories.json'
+import tags from '@/data/tags.json'
+import authors from '@/data/authors.json'
+import videos from '@/data/videos.json'
 import { MEDIA_URL, WP_URL } from './site'
 
 export type Post = (typeof posts)[number]
@@ -36,4 +39,12 @@ export const allPosts: Post[] = posts.map((p) => {
 export const allCategories = categories.map((c) => ({ ...c, name: decode(c.name) }))
 export const categoryBySlug = (slug: string) => allCategories.find((c) => c.slug === slug)
 export const postsIn = (slug: string) => allPosts.filter((p) => p.category === slug)
+
+export const allTags = tags.map((t) => ({ ...t, name: decode(t.name) }))
+export const tagBySlug = (slug: string) => allTags.find((t) => t.slug === slug)
+export const postsTagged = (slug: string) => allPosts.filter((p) => p.tags.includes(slug))
+export const allAuthors = authors
+export const authorBySlug = (slug: string) => allAuthors.find((a) => a.slug === slug)
+export const postsBy = (id: number) => allPosts.filter((p) => p.authorId === id)
+export const allVideos = videos.filter((v) => v.video)
 export const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-GB') // dd/mm/yyyy, as on the original

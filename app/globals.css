@@ -85,6 +85,9 @@ aside .sec { margin-top: 0 }
 .post .meta { font-size: .75rem; color: #777; margin: 0 0 16px }
 .post .video { width: 100%; aspect-ratio: 16/9; border: 0; display: block; margin: 0 0 16px; background: #000 }
 .post .hero-img { width: 100%; margin: 0 0 16px; display: block }
+.chip { display: inline-block; margin: 0 6px 6px 0; padding: 1px 10px; border: 1px solid #ddd; font-size: .75rem; color: var(--ink) }
+.chip:hover { border-color: var(--orange); color: var(--orange) }
+.intro { font-size: .85rem; color: #555 }
 .tag { background: var(--orange); color: #fff; padding: 1px 10px; font-size: .7rem; font-weight: 700; text-transform: uppercase }
 .content { font-size: 1.05rem }
 .content iframe { max-width: 100%; aspect-ratio: 16/9; height: auto }

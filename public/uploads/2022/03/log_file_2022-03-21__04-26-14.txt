@@ -1,0 +1,36 @@
+
+---Downloaded files---
+The import files for: Default Home (1-6) were successfully downloaded!
+Initial max execution time = 300
+Files info:
+Site URL = https://ramadan.islamonlive.in
+Data file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-content-import-file_2022-03-21__04-26-14.xml
+Widget file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-widgets-import-file_2022-03-21__04-26-14.json
+Customizer file = /home/ramadanisl/public_html/wp-content/uploads/2022/03/demo-customizer-import-file_2022-03-21__04-26-14.dat
+Redux files:
+not defined!
+
+------
+New AJAX call!
+
+
+---Importing widgets---
+Blog widget area : 
+
+Qoxag Latest Posts - [span] [strong]Most[/strong] Recent[/span]  - Imported
+WSLU Social Counter - &lt;span&gt;&lt;strong&gt;Social &lt;/strong&gt; Profile&lt;/span&gt; - Imported
+mc4wp_form_widget - No Title - Site does not support widget
+Image - No Title - Imported
+
+Category widget area : 
+
+Image - No Title - Imported
+Qoxag Latest Posts - [span][strong] In Case You  [/strong] Missed[/span]  - Imported
+
+
+
+---Importing customizer settings---
+Customizer settings import finished!
+
+---ocdi/after_import---
+
