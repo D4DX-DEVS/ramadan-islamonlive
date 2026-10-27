@@ -10,7 +10,9 @@ export const generateStaticParams = () => allCategories.map((c) => ({ slug: c.sl
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const cat = categoryBySlug((await params).slug)
-  return cat ? { title: cat.name, description: `${cat.name} – Ramadan.Islamonlive.in` } : {}
+  return cat
+    ? { title: cat.name, description: `${cat.name} – Ramadan.Islamonlive.in`, alternates: { canonical: `/category/${cat.slug}` } }
+    : {}
 }
 
 export default async function Category({ params }: { params: Promise<{ slug: string }> }) {

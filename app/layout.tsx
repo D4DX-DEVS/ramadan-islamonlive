@@ -9,6 +9,13 @@ const font = Anek_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap' }
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    siteName: 'Ramadan.Islamonlive.in',
+    locale: 'ml_IN',
+    images: ['/site/rmdn-logo1.png'],
+  },
   title: 'Ramadan.Islamonlive.in | The one and only Comprehensive Ramadan portal in Malayalam',
   description: 'The one and only Comprehensive Ramadan portal in Malayalam',
 }
