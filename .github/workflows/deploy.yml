@@ -9,6 +9,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      # .env is git-ignored, so CI sets the public site settings itself (see .env.example).
+      NEXT_PUBLIC_SITE_URL: https://ramadan.islamonlive.in
       # Add these two as repository secrets to enable the deploy step; without them the job only builds.
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
