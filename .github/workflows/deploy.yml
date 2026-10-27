@@ -15,6 +15,7 @@ jobs:
       # Add these two as repository secrets to enable the deploy step; without them the job only builds.
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      D1_DATABASE_ID: ${{ vars.D1_DATABASE_ID }} # repository variable (not secret)
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,6 +23,10 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
+      # Admin edits live in D1; without these two (repo variable + token secret) the committed data/*.json is built as-is.
+      - name: Pull admin edits from D1
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.D1_DATABASE_ID != ''
+        run: npm run d1:pull
       - run: npm run build
       - name: Deploy to Cloudflare Pages
         if: env.CLOUDFLARE_API_TOKEN != ''

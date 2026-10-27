@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin – Ramadan.Islamonlive.in</title>
+<style>
+  :root { --orange: #e49b0f; --ink: #222; --line: #ddd; --bg: #f4f4f4 }
+  * { box-sizing: border-box }
+  body { margin: 0; font: 15px/1.45 system-ui, sans-serif; color: var(--ink); background: var(--bg) }
+  header { background: #fff; border-bottom: 3px solid var(--orange); padding: 10px 16px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
+  header h1 { font-size: 1rem; margin: 0; flex: 1 }
+  main { max-width: 1000px; margin: 0 auto; padding: 16px }
+  button { font: inherit; padding: 6px 14px; border: 1px solid var(--line); background: #fff; cursor: pointer; border-radius: 3px }
+  button.primary { background: var(--orange); border-color: var(--orange); color: #fff; font-weight: 600 }
+  button.danger { color: #b00020 }
+  nav { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap }
+  nav button.on { background: var(--ink); color: #fff; border-color: var(--ink) }
+  input, select, textarea { font: inherit; width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 3px; background: #fff }
+  textarea { resize: vertical }
+  textarea.html { font: 13px/1.4 ui-monospace, monospace; min-height: 320px }
+  label { display: block; margin: 0 0 12px; font-weight: 600; font-size: .85rem }
+  label > * { font-weight: 400; margin-top: 4px }
+  .bar { display: flex; gap: 8px; margin-bottom: 12px }
+  .bar input { flex: 1 }
+  table { width: 100%; border-collapse: collapse; background: #fff }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--line) }
+  tr.row { cursor: pointer }
+  tr.row:hover { background: #fff7e6 }
+  td.dim { color: #777; font-size: .8rem; white-space: nowrap }
+  .card { background: #fff; padding: 16px; border: 1px solid var(--line) }
+  .login { max-width: 320px; margin: 15vh auto }
+  .msg { padding: 8px 12px; margin-bottom: 12px; background: #e8f5e9 }
+  .msg.err { background: #fdecea; color: #b00020 }
+  iframe { width: 100%; height: 360px; border: 1px solid var(--line); background: #fff }
+  .actions { display: flex; gap: 8px; margin-top: 8px }
+  .actions .danger { margin-left: auto }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const FIELDS = {
+  posts: [
+    ['title', 'Title'], ['slug', 'Slug (web address)'], ['category', 'Category', 'categories'], ['authorId', 'Author', 'authors'],
+    ['date', 'Date', 'date'], ['tags', 'Tags (slugs, comma separated)', 'tags'], ['image', 'Image URL (e.g. /uploads/2022/03/photo.jpg)'],
+    ['video', 'YouTube ID (video posts only)'], ['excerpt', 'Excerpt (optional)', 'area'], ['content', 'Content (HTML)', 'html'],
+  ],
+  authors: [['name', 'Name'], ['slug', 'Slug'], ['description', 'Description', 'area']],
+  tags: [['name', 'Name'], ['slug', 'Slug']],
+  videos: [['title', 'Title'], ['slug', 'Slug'], ['date', 'Date', 'date'], ['video', 'YouTube ID']],
+}
+const LABEL = { posts: 'Posts', authors: 'Authors', tags: 'Tags', videos: 'Videos' }
+const ref = {}
+const app = document.getElementById('app')
+
+const h = (tag, attrs = {}, ...kids) => {
+  const e = document.createElement(tag)
+  for (const [k, v] of Object.entries(attrs)) k.startsWith('on') ? e.addEventListener(k.slice(2), v) : (e[k] = v)
+  e.append(...kids)
+  return e
+}
+// WordPress titles hold HTML codes such as &#8211;; editors should see (and save) plain text.
+const dec = (s) => Object.assign(document.createElement('textarea'), { innerHTML: s }).value
+const show = (...nodes) => app.replaceChildren(...nodes)
+const note = (text, err) => h('div', { className: 'msg' + (err ? ' err' : '') }, text)
+
+async function api(path, method = 'GET', body) {
+  const r = await fetch('/api/' + path, { method, headers: body ? { 'content-type': 'application/json' } : {}, body: body && JSON.stringify(body) })
+  const j = await r.json().catch(() => ({}))
+  if (r.status === 401 && path !== 'login') { login(); throw new Error('Please log in again') }
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status)
+  return j
+}
+
+function login(message) {
+  const pw = h('input', { type: 'password', autocomplete: 'current-password', autofocus: true })
+  const form = h('form', { className: 'card login', onsubmit: async (e) => {
+    e.preventDefault()
+    try { await api('login', 'POST', { password: pw.value }); start() } catch (err) { login(err.message) }
+  } }, h('h2', {}, 'Admin login'), message ? note(message, true) : '', h('label', {}, 'Password', pw), h('button', { className: 'primary' }, 'Log in'))
+  show(form)
+}
+
+async function start() {
+  try {
+    ;[ref.categories, ref.authors, ref.tags] = await Promise.all(['categories', 'authors', 'tags'].map((k) => api('items/' + k)))
+  } catch { return }
+  list('posts')
+}
+
+function frame(kind, ...body) {
+  const tabs = Object.entries(LABEL).map(([k, name]) => h('button', { className: k === kind ? 'on' : '', onclick: () => list(k) }, name))
+  const publish = h('button', { className: 'primary', onclick: async () => {
+    if (!confirm('Publish all changes to the live site? This takes about 2-3 minutes.')) return
+    try { await api('publish', 'POST'); alert('Publishing started. The site updates in 2-3 minutes.') } catch (e) { alert(e.message) }
+  } }, 'Publish to site')
+  show(
+    h('header', {}, h('h1', {}, 'Ramadan.Islamonlive.in admin'), publish, h('button', { onclick: async () => { await api('logout', 'POST'); login() } }, 'Log out')),
+    h('main', {}, h('nav', {}, ...tabs), ...body),
+  )
+}
+
+async function list(kind, message) {
+  frame(kind, h('p', {}, 'Loading…'))
+  let items
+  try { items = await api('items/' + kind) } catch (e) { return frame(kind, note(e.message, true)) }
+  items.sort((a, b) => (b.date || '').localeCompare(a.date || '') || (a.name || '').localeCompare(b.name || ''))
+  const key = (d) => (kind === 'tags' ? d.slug : d.id)
+  const body = h('tbody')
+  const draw = (q) => body.replaceChildren(...items
+    .filter((d) => (d.title || d.name).toLowerCase().includes(q.toLowerCase()) || (d.slug || '').includes(q))
+    .slice(0, 200)
+    .map((d) => h('tr', { className: 'row', onclick: () => edit(kind, key(d)) },
+      h('td', {}, dec(d.title || d.name)), h('td', { className: 'dim' }, d.category || d.slug || ''), h('td', { className: 'dim' }, (d.date || '').slice(0, 10)))))
+  draw('')
+  const search = h('input', { placeholder: `Search ${items.length} ${LABEL[kind].toLowerCase()}…`, oninput: () => draw(search.value) })
+  frame(kind, message ? note(message) : '', h('div', { className: 'bar' }, search, h('button', { className: 'primary', onclick: () => edit(kind, null) }, 'New')), h('table', {}, body))
+}
+
+async function edit(kind, key) {
+  let item = {}
+  if (key !== null) try { item = await api(`items/${kind}/${encodeURIComponent(key)}`) } catch (e) { return list(kind, e.message) }
+  const inputs = {}
+  const form = h('div', { className: 'card' })
+  for (const [f, label, type] of FIELDS[kind]) {
+    let el
+    if (type === 'categories' || type === 'authors') {
+      const opts = type === 'categories' ? ref.categories.map((c) => [c.slug, c.name]) : ref.authors.map((a) => [a.id, a.name]).sort((a, b) => a[1].localeCompare(b[1]))
+      el = h('select', {}, ...opts.map(([v, n]) => h('option', { value: v }, n)))
+      el.value = item[f] ?? opts[0][0]
+    } else if (type === 'area' || type === 'html') {
+      el = h('textarea', { rows: type === 'html' ? 16 : 3, className: type, value: item[f] ?? '' })
+    } else if (type === 'date') {
+      el = h('input', { type: 'datetime-local', step: 1, value: (item[f] || new Date(Date.now() - new Date().getTimezoneOffset() * 6e4).toISOString()).slice(0, 19) })
+    } else if (type === 'tags') {
+      el = h('input', { value: (item[f] || []).join(', ') })
+      el.setAttribute('list', 'taglist')
+    } else {
+      // WordPress stored some non-Latin slugs percent-encoded; the site decodes them anyway, so show and save them plain.
+      el = h('input', { value: f === 'slug' ? decodeURIComponent(item[f] ?? '') : dec(item[f] ?? '') })
+    }
+    inputs[f] = el
+    form.append(h('label', {}, label, el))
+  }
+  form.append(h('datalist', { id: 'taglist' }, ...ref.tags.map((t) => h('option', { value: t.slug }))))
+  const err = h('div')
+  const preview = h('div')
+  const read = () => Object.fromEntries(Object.entries(inputs).map(([f, el]) => [f,
+    f === 'authorId' ? +el.value : f === 'tags' ? el.value.split(',').map((s) => s.trim()).filter(Boolean) : el.value]))
+  const actions = h('div', { className: 'actions' },
+    h('button', { className: 'primary', onclick: async () => {
+      try { await api(key === null ? 'items/' + kind : `items/${kind}/${encodeURIComponent(key)}`, key === null ? 'POST' : 'PUT', read()); await start0(kind) } catch (e) { err.replaceChildren(note(e.message, true)) }
+    } }, 'Save'),
+    h('button', { onclick: () => list(kind) }, 'Cancel'),
+    inputs.content ? h('button', { onclick: () => {
+      // Sandboxed so pasted scripts in a post cannot reach the admin session.
+      preview.replaceChildren(h('iframe', { sandbox: '', srcdoc: `<meta charset="utf-8"><body style="font:16px/1.7 sans-serif;max-width:720px;margin:16px auto">${inputs.content.value}` }))
+    } }, 'Preview') : '',
+    key !== null ? h('button', { className: 'danger', onclick: async () => {
+      if (confirm('Delete this permanently?')) try { await api(`items/${kind}/${encodeURIComponent(key)}`, 'DELETE'); await start0(kind) } catch (e) { err.replaceChildren(note(e.message, true)) }
+    } }, 'Delete') : '')
+  frame(kind, h('h2', {}, `${key === null ? 'New' : 'Edit'} ${LABEL[kind].slice(0, -1).toLowerCase()}`), err, form, actions, preview)
+}
+
+// Authors and tags feed the dropdowns, so reload them after every save.
+const start0 = async (kind) => { await start(); list(kind, 'Saved. Click "Publish to site" when you are ready to put changes live.') }
+
+api('me').then(start, () => login())
+</script>
+</body>
+</html>

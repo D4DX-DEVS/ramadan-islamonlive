@@ -51,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <p>
             Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
           </p>
+          <a className="admin-btn" href="/admin/">Admin</a>
         </footer>
       </body>
     </html>
