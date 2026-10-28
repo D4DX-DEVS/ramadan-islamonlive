@@ -165,6 +165,20 @@ async function api(path, method = 'GET', body) {
 const leave = () => !dirty || confirm('You have unsaved changes. Leave without saving?')
 addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = '' } })
 
+// Every screen has its own address (#/posts, #/posts/123, #/posts/new), so the browser Back button and reloads work.
+const go = (hash) => { location.hash = hash }
+const route = () => {
+  const [, k, key] = location.hash.split('/').map(decodeURIComponent)
+  const kind = KINDS[k] ? k : 'posts'
+  key === 'new' ? edit(kind, null) : key ? edit(kind, key) : list(kind)
+}
+let current = location.hash
+addEventListener('hashchange', () => {
+  if (location.hash === current) return
+  if (dirty && !confirm('You have unsaved changes. Leave without saving?')) return go(current) // put the address back
+  dirty = false; current = location.hash; route()
+})
+
 /* ---------- login ---------- */
 function login(message) {
   dirty = false
@@ -181,15 +195,20 @@ function login(message) {
 }
 
 /* ---------- shell ---------- */
-async function start(kind = 'posts') {
-  try { ;[ref.categories, ref.authors, ref.tags] = await Promise.all(['categories', 'authors', 'tags'].map((k) => api('items/' + k))) } catch { return }
+// Authors and tags feed the dropdowns, so reload them (and drop cached lists) after every save.
+async function refresh() {
+  ;[ref.categories, ref.authors, ref.tags] = await Promise.all(['categories', 'authors', 'tags'].map((k) => api('items/' + k)))
   Object.keys(cache).forEach((k) => delete cache[k])
-  list(kind)
+}
+async function start() {
+  try { await refresh() } catch { return }
+  current = location.hash
+  route()
 }
 
 function shell(kind, ...content) {
   const tabs = Object.entries(KINDS).map(([k, v]) =>
-    h('button', { className: 'tab' + (k === kind ? ' on' : ''), onclick: () => leave() && (dirty = false, list(k)) }, v.label, h('span', {}, cache[k] ? cache[k].length : '')))
+    h('button', { className: 'tab' + (k === kind ? ' on' : ''), onclick: () => go('#/' + k) }, v.label, h('span', {}, cache[k] ? cache[k].length : '')))
   app.replaceChildren(h('div', { className: 'shell' },
     h('aside', { className: 'side' }, h('div', { className: 'brand' }, 'Admin', h('small', {}, 'Ramadan.Islamonlive.in')), ...tabs, h('div', { className: 'sp' }),
       h('a', { href: '/', target: '_blank', rel: 'noopener' }, 'View site ↗'),
@@ -217,7 +236,7 @@ async function list(kind) {
     const q = search.value.trim().toLowerCase()
     const hit = items.filter((d) => (!q || d._q.includes(q)) && (!cat || !cat.value || d.category === cat.value))
     rows.replaceChildren(...(hit.length ? hit.slice(0, shown).map((d) =>
-      h('div', { className: 'row', tabIndex: 0, role: 'button', onclick: () => edit(kind, key(d)), onkeydown: (e) => e.key === 'Enter' && edit(kind, key(d)) },
+      h('div', { className: 'row', tabIndex: 0, role: 'button', onclick: () => go(`#/${kind}/${encodeURIComponent(key(d))}`), onkeydown: (e) => e.key === 'Enter' && go(`#/${kind}/${encodeURIComponent(key(d))}`) },
         h('div', { className: 't' }, dec(d.title || d.name)),
         h('span', { className: 'pill' }, d.category ? (ref.categories.find((c) => c.slug === d.category)?.name || d.category) : plainSlug(d.slug)),
         h('time', {}, (d.date || '').slice(0, 10)))) : [h('div', { className: 'empty' }, 'Nothing found')]))
@@ -225,7 +244,7 @@ async function list(kind) {
   }
   draw()
   shell(kind,
-    h('div', { className: 'head' }, h('h1', {}, KINDS[kind].label), h('button', { className: 'btn primary', onclick: () => edit(kind, null) }, '+ New ' + KINDS[kind].one)),
+    h('div', { className: 'head' }, h('h1', {}, KINDS[kind].label), h('button', { className: 'btn primary', onclick: () => go(`#/${kind}/new`) }, '+ New ' + KINDS[kind].one)),
     h('div', { className: 'tools' }, search, cat), rows, more)
 }
 
@@ -233,7 +252,6 @@ async function list(kind) {
 const field = (label, el, hint) => h('label', { className: 'f' }, label, el, hint ? h('span', { className: 'hint' }, hint) : null)
 
 async function edit(kind, key) {
-  if (!leave()) return
   let item = {}
   if (key !== null) try { item = await api(`items/${kind}/${encodeURIComponent(key)}`) } catch (e) { return toast(e.message, true) }
   const isNew = key === null
@@ -332,19 +350,19 @@ async function edit(kind, key) {
       const body = Object.fromEntries(Object.entries(get).map(([f, fn]) => [f, fn()]))
       body[kind === 'authors' || kind === 'tags' ? 'name' : 'title'] = title.value
       await api(isNew ? 'items/' + kind : `items/${kind}/${encodeURIComponent(key)}`, isNew ? 'POST' : 'PUT', body)
-      dirty = false; toast('Saved. The change is live on the site.'); await start(kind)
+      dirty = false; toast('Saved. The change is live on the site.'); await refresh(); go('#/' + kind)
     } catch (e) { err.replaceChildren(h('div', { className: 'banner' }, e.message)); toast(e.message, true); saveBtn.disabled = false; saveBtn.textContent = isNew ? 'Create' : 'Save changes' }
   }
   saveBtn.onclick = save
   const dlg = h('dialog', {}, h('p', {}, `Delete this ${KINDS[kind].one} for good? It disappears from the site straight away.`),
     h('div', { className: 'acts' }, h('button', { className: 'btn', onclick: () => dlg.close() }, 'Keep it'),
-      h('button', { className: 'btn danger', onclick: async () => { dlg.close(); try { await api(`items/${kind}/${encodeURIComponent(key)}`, 'DELETE'); dirty = false; toast('Deleted'); await start(kind) } catch (e) { toast(e.message, true) } } }, 'Delete')))
+      h('button', { className: 'btn danger', onclick: async () => { dlg.close(); try { await api(`items/${kind}/${encodeURIComponent(key)}`, 'DELETE'); dirty = false; toast('Deleted'); await refresh(); go('#/' + kind) } catch (e) { toast(e.message, true) } } }, 'Delete')))
   const actions = h('div', { className: 'card' }, h('div', { className: 'savebar' }, saveBtn,
-    h('button', { className: 'btn', onclick: () => leave() && (dirty = false, list(kind)) }, 'Cancel'),
+    h('button', { className: 'btn', onclick: () => go('#/' + kind) }, 'Cancel'),
     isNew ? null : h('button', { className: 'btn danger', onclick: () => dlg.showModal() }, 'Delete')))
 
   shell(kind,
-    h('button', { className: 'back', onclick: () => leave() && (dirty = false, list(kind)) }, '← ' + KINDS[kind].label),
+    h('button', { className: 'back', onclick: () => go('#/' + kind) }, '← ' + KINDS[kind].label),
     h('div', { className: 'head' }, h('h1', {}, (isNew ? 'New ' : 'Edit ') + KINDS[kind].one)),
     err,
     h('div', { className: kind === 'posts' ? 'edit' : 'edit', style: kind === 'posts' ? '' : 'grid-template-columns:minmax(0,560px)' },
