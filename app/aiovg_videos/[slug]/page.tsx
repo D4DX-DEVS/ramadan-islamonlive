@@ -1,18 +1,16 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { allVideos, decode, fmtDate } from '@/lib/data'
+import { db, decode, fmtDate } from '@/lib/data'
 import Sidebar from '../../Sidebar'
 
 type Props = { params: Promise<{ slug: string }> }
 
 // Old WordPress video-gallery URLs (/aiovg_videos/<slug>), kept so existing links and search results still resolve.
-export const dynamicParams = false
-export const generateStaticParams = () => allVideos.map((v) => ({ slug: v.slug }))
 
 const find = async (params: Props['params']) => {
   const slug = decodeURIComponent((await params).slug)
-  return allVideos.find((v) => v.slug === slug)
+  return (await db()).allVideos.find((v) => v.slug === slug)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { allPosts, decode, fmtDate } from '@/lib/data'
+import { db, decode, fmtDate } from '@/lib/data'
 import { APP_URL } from '@/lib/site'
 import { href } from './PostCard'
 
@@ -9,7 +9,8 @@ export const Ad = () => (
   </a>
 )
 
-export default function Sidebar({ latest = false }: { latest?: boolean }) {
+export default async function Sidebar({ latest = false }: { latest?: boolean }) {
+  const { allPosts } = latest ? await db() : { allPosts: [] }
   return (
     <aside className="side">
       {latest && (

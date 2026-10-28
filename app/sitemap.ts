@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next'
-import { allAuthors, allCategories, allPosts, allTags, allVideos } from '@/lib/data'
+import { db } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static' // required for `output: 'export'`
+export const dynamic = 'force-static'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { allAuthors, allCategories, allPosts, allTags, allVideos } = await db()
   return [
     { url: `${SITE_URL}/` },
     ...allCategories.map((c) => ({ url: `${SITE_URL}/category/${c.slug}` })),

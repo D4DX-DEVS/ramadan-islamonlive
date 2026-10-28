@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { decode } from '@/lib/data'
 import { APP_URL } from '@/lib/site'
-import { articles, columns, features, hero, qa, quran, synopsis, videos, zakat } from '@/lib/home'
+import { homeData } from '@/lib/home'
 import { Card, Tile, href } from './PostCard'
 
 const Title = ({ children }: { children: React.ReactNode }) => <h2 className="sec">{children}</h2>
@@ -12,7 +12,8 @@ const Ad = () => (
   </a>
 )
 
-export default function Home() {
+export default async function Home() {
+  const { articles, columns, features, hero, qa, quran, synopsis, videos, zakat } = await homeData()
   return (
     <>
       <section className="wrap hero">

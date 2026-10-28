@@ -1,10 +1,11 @@
 import Link from 'next/link'
-import { Post, decode, categoryBySlug } from '@/lib/data'
+import { Post, db, decode } from '@/lib/data'
 
 export const href = (p: Post) => `/${p.category}/${p.slug}`
 
 /** Image with the title overlaid (hero / columns / zakat). */
-export function Tile({ post, badge, className = '' }: { post: Post; badge?: boolean; className?: string }) {
+export async function Tile({ post, badge, className = '' }: { post: Post; badge?: boolean; className?: string }) {
+  const { categoryBySlug } = badge ? await db() : { categoryBySlug: () => undefined }
   return (
     <Link href={href(post)} className={`tile ${className}`}>
       {post.image && <img src={post.image} alt="" loading="lazy" />}

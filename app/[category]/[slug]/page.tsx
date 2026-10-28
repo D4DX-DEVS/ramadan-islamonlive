@@ -1,19 +1,16 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { allAuthors, allPosts, categoryBySlug, decode, fmtDate, strip, tagBySlug } from '@/lib/data'
+import { db, decode, fmtDate, getPost, strip } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 import Sidebar from '../../Sidebar'
 
 type Props = { params: Promise<{ category: string; slug: string }> }
 
-export const dynamicParams = false
-export const generateStaticParams = () => allPosts.map((p) => ({ category: p.category, slug: p.slug }))
-
 const find = async (params: Props['params']) => {
   const { category, slug: s } = await params
   const slug = decodeURIComponent(s)
-  return allPosts.find((p) => p.category === category && p.slug === slug)
+  return getPost(category, slug)
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -42,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostPage({ params }: Props) {
   const post = await find(params)
   if (!post) notFound()
+  const { categoryBySlug, allAuthors, tagBySlug } = await db()
   const cat = categoryBySlug(post.category)
   const author = allAuthors.find((a) => a.id === post.authorId)
   const jsonLd = {

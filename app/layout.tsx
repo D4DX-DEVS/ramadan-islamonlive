@@ -7,6 +7,8 @@ import './globals.css'
 
 const font = Anek_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap' })
 
+export const dynamic = 'force-static' // pages are cached and refreshed by the admin (revalidatePath)
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
@@ -51,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <p>
             Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
           </p>
-          <a className="admin-btn" href="/admin/">Admin</a>
+          <a className="admin-btn" href="/admin">Admin</a>
         </footer>
       </body>
     </html>

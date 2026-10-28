@@ -1,13 +1,10 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { allTags, postsTagged, tagBySlug } from '@/lib/data'
+import { db } from '@/lib/data'
 import PostList from '../../PostList'
 
-export const dynamicParams = false
-export const generateStaticParams = () => allTags.map((t) => ({ slug: t.slug }))
-
 // Next hands over the still-percent-encoded segment for non-Latin slugs.
-const find = async (params: Promise<{ slug: string }>) => tagBySlug(decodeURIComponent((await params).slug))
+const find = async (params: Promise<{ slug: string }>) => (await db()).tagBySlug(decodeURIComponent((await params).slug))
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const tag = await find(params)
@@ -19,5 +16,5 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Tag({ params }: { params: Promise<{ slug: string }> }) {
   const tag = await find(params)
   if (!tag) notFound()
-  return <PostList title={`Tag: ${tag.name}`} posts={postsTagged(tag.slug)} />
+  return <PostList title={`Tag: ${tag.name}`} posts={(await db()).postsTagged(tag.slug)} />
 }

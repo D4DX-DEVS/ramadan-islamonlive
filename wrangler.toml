@@ -1,9 +1,0 @@
-name = "ramadan-islamonlive"
-compatibility_date = "2025-01-01"
-pages_build_output_dir = "out"
-
-# Content database behind /admin. database_id is filled in after `wrangler d1 create ramadan-admin`.
-[[d1_databases]]
-binding = "DB"
-database_name = "ramadan-admin"
-database_id = "b5b13952-539d-4173-be02-7a0d3d0b017d"

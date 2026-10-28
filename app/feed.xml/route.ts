@@ -1,13 +1,13 @@
-import { allPosts, decode, strip } from '@/lib/data'
+import { decode, latestFull, strip } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static' // required for `output: 'export'`
+export const dynamic = 'force-static'
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // Replaces WordPress's /feed/ (which /_redirects points here).
-export function GET() {
-  const items = allPosts.slice(0, 20).map((p) => {
+export async function GET() {
+  const items = (await latestFull(20)).map((p) => {
     const url = encodeURI(`${SITE_URL}/${p.category}/${p.slug}`)
     return `<item><title>${esc(decode(p.title))}</title><link>${url}</link><guid>${url}</guid><pubDate>${new Date(p.date).toUTCString()}</pubDate><description>${esc(strip(p.excerpt || p.content).slice(0, 300))}</description></item>`
   })
