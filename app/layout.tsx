@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </nav>
         <main>{children}</main>
         <footer className="site-footer">
-          <img src="/site/islamonlive-logo.png" alt="islamonlive" />
+          <img src="/site/onlive-logo-w.png" alt="islamonlive" />
           <p>
             Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
           </p>

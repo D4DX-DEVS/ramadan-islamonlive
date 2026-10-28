@@ -61,7 +61,7 @@ aside .sec { margin-top: 0 }
 
 /* footer */
 .site-footer { background: #222; color: #ddd; text-align: center; padding: 28px 16px; font-size: .8rem }
-.site-footer img { height: 44px; width: auto; background: #fff; padding: 6px 12px; border-radius: 6px }
+.site-footer img { height: 28px; width: auto }
 .site-footer a { color: var(--orange) }
 .site-footer .admin-btn { display: inline-block; margin-top: 8px; padding: 4px 16px; border: 1px solid var(--orange); border-radius: 3px }
 .site-footer .admin-btn:hover { background: var(--orange); color: #fff }
