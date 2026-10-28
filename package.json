@@ -6,13 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "deploy": "npm run build && npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main",
     "images": "node --env-file-if-exists=.env scripts/images.mjs",
     "videos": "node --env-file-if-exists=.env scripts/videos.mjs",
     "r2:upload": "node --env-file-if-exists=.env scripts/r2-upload.mjs",
-    "d1:seed": "node --env-file-if-exists=.env scripts/d1.mjs seed",
-    "d1:pull": "node --env-file-if-exists=.env scripts/d1.mjs pull",
-    "release": "npm run d1:pull && npm run deploy"
+    "d1:seed": "node --env-file-if-exists=.env scripts/d1.mjs seed"
   },
   "dependencies": {
     "@types/node": "^26.6.5",
