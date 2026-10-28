@@ -6,3 +6,6 @@ next-env.d.ts
 out
 .env
 .wrangler
+
+.vercel
+.env*

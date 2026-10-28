@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { db } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic' // read through the tagged content cache on each request, so it is never stale
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { allAuthors, allCategories, allPosts, allTags, allVideos } = await db()
