@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import { db } from '@/lib/data'
 import PostList from '../../PostList'
 
+// Built at deploy time and cached; new or edited items render on first visit and the admin refreshes the rest.
+export const generateStaticParams = async () => (await db()).allCategories.map((c) => ({ slug: c.slug }))
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const cat = (await db()).categoryBySlug((await params).slug)
   return cat

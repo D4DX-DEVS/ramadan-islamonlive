@@ -6,6 +6,9 @@ import PostList from '../../PostList'
 // Next hands over the still-percent-encoded segment for non-Latin slugs.
 const find = async (params: Promise<{ slug: string }>) => (await db()).tagBySlug(decodeURIComponent((await params).slug))
 
+// Built at deploy time and cached; new or edited items render on first visit and the admin refreshes the rest.
+export const generateStaticParams = async () => (await db()).allTags.map((t) => ({ slug: t.slug }))
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const tag = await find(params)
   return tag

@@ -73,14 +73,9 @@ export async function db() {
   }
 }
 
-/** One post with its body. `slug` is the decoded form; WP rows may hold it percent-encoded. */
-export const getPost = unstable_cache(
-  async (category: string, slug: string): Promise<Post | null> => {
-    const r = await query(
-      "SELECT data FROM items WHERE kind = 'posts' AND json_extract(data, '$.category') = ? AND json_extract(data, '$.slug') IN (?, ?, ?) LIMIT 1",
-      // WP stored non-Latin slugs percent-encoded with lowercase hex; encodeURIComponent gives uppercase.
-      [category, slug, encodeURIComponent(slug), encodeURIComponent(slug).toLowerCase()],
-    )
+const postById = unstable_cache(
+  async (id: number): Promise<Post | null> => {
+    const r = await query("SELECT data FROM items WHERE kind = 'posts' AND key = ?", [String(id)]) // primary-key hit: reads one row
     if (!r[0]) return null
     const p = JSON.parse(r[0].data) as Post
     return { ...p, slug: decodeURIComponent(p.slug), content: cleanContent(p.content), image: p.image && media(p.image) }
@@ -88,6 +83,12 @@ export const getPost = unstable_cache(
   ['post'],
   { tags: ['content'] },
 )
+
+/** One post with its body. `slug` is the decoded form. The id comes from the cached post list, so D1 is read by key, not scanned. */
+export async function getPost(category: string, slug: string): Promise<Post | null> {
+  const hit = (await db()).allPosts.find((p) => p.category === category && p.slug === slug)
+  return hit ? postById(hit.id) : null
+}
 
 /** The newest posts with bodies, for the RSS feed. */
 export const latestFull = unstable_cache(
