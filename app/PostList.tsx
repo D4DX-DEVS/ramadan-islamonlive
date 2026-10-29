@@ -9,7 +9,7 @@ export default function PostList({ title, posts, intro }: { title: string; posts
     <div className="gray">
       <div className="wrap titlebar">
         <h1>{title}</h1>
-        <span><Link href="/">Home</Link> › {title}</span>
+        <nav aria-label="Breadcrumb"><Link href="/">Home</Link> › <span aria-current="page">{title}</span></nav>
       </div>
       <div className="wrap layout">
         <div>

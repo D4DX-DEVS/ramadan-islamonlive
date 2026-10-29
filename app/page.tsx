@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { decode } from '@/lib/data'
 import { APP_URL } from '@/lib/site'
 import { homeData } from '@/lib/home'
+import { JsonLd, ORG_ID, SITE_ID, SITE_NAME, abs, publisher } from '@/lib/seo'
+import { SITE_URL } from '@/lib/site'
 import { Card, Tile, href } from './PostCard'
 
 const Title = ({ children }: { children: React.ReactNode }) => <h2 className="sec">{children}</h2>
@@ -16,8 +18,14 @@ export default async function Home() {
   const { articles, columns, features, hero, qa, quran, synopsis, videos, zakat } = await homeData()
   return (
     <>
+      <JsonLd data={{ '@context': 'https://schema.org', '@graph': [
+        { ...publisher, sameAs: undefined },
+        { '@type': 'WebSite', '@id': SITE_ID, url: SITE_URL, name: SITE_NAME, inLanguage: 'ml', publisher: { '@id': ORG_ID } },
+        { '@type': 'WebPage', '@id': `${SITE_URL}/#webpage`, url: abs('/'), name: SITE_NAME, isPartOf: { '@id': SITE_ID }, inLanguage: 'ml' },
+      ] }} />
+      <h1 className="sr-only">Ramadan.Islamonlive.in: Malayalam Ramadan portal</h1>
       <section className="wrap hero">
-        {hero.map((p) => <Tile key={p.id} post={p} badge />)}
+        {hero.map((p, i) => <Tile key={p.id} post={p} badge priority={i === 0} />)}
       </section>
 
       <section className="wrap">

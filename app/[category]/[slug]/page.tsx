@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { db, decode, fmtDate, getPost, strip } from '@/lib/data'
+import { JsonLd, SITE_ID, abs, breadcrumbs, publisher } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import Sidebar from '../../Sidebar'
 
@@ -45,21 +46,41 @@ export default async function PostPage({ params }: Props) {
   const { categoryBySlug, allAuthors, tagBySlug } = await db()
   const cat = categoryBySlug(post.category)
   const author = allAuthors.find((a) => a.id === post.authorId)
+  const url = abs(`/${post.category}/${post.slug}`)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: decode(post.title),
+    '@id': `${url}#article`,
+    mainEntityOfPage: url,
+    url,
+    headline: decode(post.title).slice(0, 110),
+    description: (strip(post.excerpt) || strip(post.content)).slice(0, 200) || undefined,
     datePublished: post.date,
-    author: post.author ? { '@type': 'Person', name: post.author } : undefined,
+    author: post.author ? { '@type': 'Person', name: post.author, url: author ? abs(`/author/${author.slug}`) : undefined } : undefined,
+    publisher,
+    isPartOf: { '@id': SITE_ID },
+    articleSection: cat?.name,
     image: post.image ? new URL(post.image, SITE_URL).href : undefined,
+    inLanguage: 'ml',
+  }
+  const videoLd = post.video && {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name: decode(post.title),
+    description: strip(post.excerpt) || decode(post.title),
+    thumbnailUrl: `https://img.youtube.com/vi/${post.video}/hqdefault.jpg`,
+    uploadDate: post.date,
+    embedUrl: `https://www.youtube.com/embed/${post.video}`,
     inLanguage: 'ml',
   }
   return (
     <div className="gray">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
-      <div className="wrap crumbs">
-        <Link href="/">Home</Link> › <Link href={`/category/${post.category}`}>{cat?.name}</Link> › {decode(post.title)}
-      </div>
+      <JsonLd data={jsonLd} />
+      {videoLd && <JsonLd data={videoLd} />}
+      <JsonLd data={breadcrumbs([['Home', '/'], [cat?.name ?? post.category, `/category/${post.category}`], [decode(post.title), `/${post.category}/${post.slug}`]])} />
+      <nav className="wrap crumbs" aria-label="Breadcrumb">
+        <Link href="/">Home</Link> › <Link href={`/category/${post.category}`}>{cat?.name}</Link> › <span aria-current="page">{decode(post.title)}</span>
+      </nav>
       <div className="wrap layout">
         <article className="post box">
           <Link href={`/category/${post.category}`} className="tag">{cat?.name}</Link>
@@ -70,7 +91,7 @@ export default async function PostPage({ params }: Props) {
           {post.video ? (
             <iframe className="video" src={`https://www.youtube.com/embed/${post.video}`} title={decode(post.title)} loading="lazy" allowFullScreen />
           ) : (
-            post.image && <img src={post.image} alt="" className="hero-img" />
+            post.image && <img src={post.image} alt={decode(post.title)} className="hero-img" fetchPriority="high" />
           )}
           <div className="content" dangerouslySetInnerHTML={{ __html: post.content }} />
           {post.tags.length > 0 && (

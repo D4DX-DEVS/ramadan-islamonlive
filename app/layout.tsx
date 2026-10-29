@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Link from 'next/link'
 import { Anek_Malayalam, Noto_Serif_Malayalam } from 'next/font/google'
 import NavLinks from './NavLinks'
@@ -12,16 +12,19 @@ export const dynamic = 'force-static' // pages are cached and refreshed by the a
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: '/' },
+  alternates: { canonical: '/', types: { 'application/rss+xml': '/feed.xml' } },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 } },
   openGraph: {
     type: 'website',
     siteName: 'Ramadan.Islamonlive.in',
     locale: 'ml_IN',
     images: ['/site/rmdn-logo1.png'],
   },
-  title: 'Ramadan.Islamonlive.in | The one and only Comprehensive Ramadan portal in Malayalam',
+  title: { default: 'Ramadan.Islamonlive.in | The one and only Comprehensive Ramadan portal in Malayalam', template: '%s | Ramadan.Islamonlive.in' },
   description: 'The one and only Comprehensive Ramadan portal in Malayalam',
 }
+
+export const viewport: Viewport = { themeColor: '#07140f' }
 
 const nav = [
   ['Home', '/'],
@@ -37,22 +40,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ml">
       <body className={`${font.className} ${serif.variable}`}>
+        <a href="#main" className="skip">Skip to content</a>
         <header className="site-header wrap">
           <Link href="/" className="logo">
-            <img src="/site/rmdn-logo1.png" alt="Ramadan Online" />
+            <img src="/site/rmdn-logo1.png" alt="Ramadan Online" width={300} height={124} />
           </Link>
           <a href={APP_URL} target="_blank" rel="noopener" className="banner">
-            <img src="/site/for-rmdn.png" alt="Thafheem ul Quran app" />
+            <img src="/site/for-rmdn.png" alt="Thafheem ul Quran app" width={720} height={90} />
           </a>
         </header>
-        <nav className="main-nav">
+        <nav className="main-nav" aria-label="Main">
           <div className="wrap">
             <NavLinks items={nav} />
           </div>
         </nav>
-        <main>{children}</main>
+        <main id="main">{children}</main>
         <footer className="site-footer">
-          <img src="/site/onlive-logo-w.png" alt="islamonlive" />
+          <img src="/site/onlive-logo-w.png" alt="islamonlive" width={207} height={59} />
           <div className="links">
             {nav.map(([label, to]) => <Link key={to} href={to}>{label}</Link>)}
           </div>

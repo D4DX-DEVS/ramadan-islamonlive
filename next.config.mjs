@@ -22,6 +22,8 @@ export default {
   headers: async () => [
     { source: '/uploads/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000' }] },
     { source: '/site/:path*', headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000' }] },
+    // The *.vercel.app address duplicates the real domain, so keep it out of search results.
+    { source: '/:path*', has: [{ type: 'host', value: '(?<h>.+\.vercel\.app)' }], headers: [{ key: 'X-Robots-Tag', value: 'noindex' }] },
     { source: '/admin', headers: noindex },
     { source: '/admin/:path*', headers: noindex },
   ],

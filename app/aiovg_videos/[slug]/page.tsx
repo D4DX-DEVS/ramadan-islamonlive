@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { db, decode, fmtDate } from '@/lib/data'
+import { JsonLd, abs, breadcrumbs } from '@/lib/seo'
 import Sidebar from '../../Sidebar'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -33,9 +34,11 @@ export default async function VideoPage({ params }: Props) {
   if (!v) notFound()
   return (
     <div className="gray">
-      <div className="wrap crumbs">
-        <Link href="/">Home</Link> › <Link href="/category/videos">Videos</Link> › {decode(v.title)}
-      </div>
+      <JsonLd data={{ '@context': 'https://schema.org', '@type': 'VideoObject', name: decode(v.title), description: decode(v.title), thumbnailUrl: `https://img.youtube.com/vi/${v.video}/hqdefault.jpg`, uploadDate: v.date, embedUrl: `https://www.youtube.com/embed/${v.video}`, url: abs(`/aiovg_videos/${v.slug}`), inLanguage: 'ml' }} />
+      <JsonLd data={breadcrumbs([['Home', '/'], ['Videos', '/category/videos'], [decode(v.title), `/aiovg_videos/${v.slug}`]])} />
+      <nav className="wrap crumbs" aria-label="Breadcrumb">
+        <Link href="/">Home</Link> › <Link href="/category/videos">Videos</Link> › <span aria-current="page">{decode(v.title)}</span>
+      </nav>
       <div className="wrap layout">
         <article className="post box">
           <h1>{decode(v.title)}</h1>

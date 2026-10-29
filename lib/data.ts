@@ -98,4 +98,7 @@ export const latestFull = unstable_cache(
   { tags: ['content'] },
 )
 
+// Tag pages with fewer posts than this are noindex and left out of the sitemap.
+export const MIN_INDEXABLE = 2
+
 export const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-GB') // dd/mm/yyyy, as on the original
