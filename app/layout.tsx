@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Anek_Malayalam } from 'next/font/google'
+import { Anek_Malayalam, Noto_Serif_Malayalam } from 'next/font/google'
 import NavLinks from './NavLinks'
 import { APP_URL, SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const font = Anek_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap' })
+const serif = Noto_Serif_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap', variable: '--font-serif' })
 
 export const dynamic = 'force-static' // pages are cached and refreshed by the admin (revalidatePath)
 
@@ -35,7 +36,7 @@ const nav = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ml">
-      <body className={font.className}>
+      <body className={`${font.className} ${serif.variable}`}>
         <header className="site-header wrap">
           <Link href="/" className="logo">
             <img src="/site/rmdn-logo1.png" alt="Ramadan Online" />
@@ -44,12 +45,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <img src="/site/for-rmdn.png" alt="Thafheem ul Quran app" />
           </a>
         </header>
-        <nav className="wrap main-nav">
-          <NavLinks items={nav} />
+        <nav className="main-nav">
+          <div className="wrap">
+            <NavLinks items={nav} />
+          </div>
         </nav>
         <main>{children}</main>
         <footer className="site-footer">
           <img src="/site/onlive-logo-w.png" alt="islamonlive" />
+          <div className="links">
+            {nav.map(([label, to]) => <Link key={to} href={to}>{label}</Link>)}
+          </div>
           <p>
             Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
           </p>
