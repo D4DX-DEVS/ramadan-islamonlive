@@ -7,9 +7,8 @@
 /site/*
   Cache-Control: public, max-age=2592000
 
-# the *.pages.dev address duplicates the real domain, so keep it out of search results
-https://:project.pages.dev/*
-  X-Robots-Tag: noindex
+# No host-based noindex here: behind a forwarder the real domain can arrive with a pages.dev Host and would be
+# de-indexed. The pages.dev copy is handled by its canonical link to the real domain.
 
 /admin
   Cache-Control: no-store

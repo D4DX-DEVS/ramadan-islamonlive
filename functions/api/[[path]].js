@@ -13,4 +13,4 @@ async function rebuild(env) {
 }
 
 export const onRequest = ({ request, env, params }) =>
-  handle({ request, params, env: { DB: env.DB, ADMIN_PASSWORD: env.ADMIN_PASSWORD, onChange: () => rebuild(env) } })
+  handle({ request, params, env: { DB: env.DB, ADMIN_PASSWORD: env.ADMIN_PASSWORD, SITE_ORIGIN: 'https://ramadan.islamonlive.in', onChange: () => rebuild(env) } })
