@@ -9,23 +9,35 @@ export const Ad = () => (
   </a>
 )
 
-export default async function Sidebar({ latest = false }: { latest?: boolean }) {
+import type { Post } from '@/lib/data'
+
+const Mini = ({ p }: { p: Post }) => (
+  <Link href={href(p)} className="lp">
+    {p.image && <img src={p.image} alt="" loading="lazy" width={84} height={64} />}
+    <span>
+      <span className="t">{decode(p.title)}</span>
+      <small>{fmtDate(p.date)}</small>
+    </span>
+  </Link>
+)
+
+export default async function Sidebar({ latest = false, related = [] }: { latest?: boolean; related?: Post[] }) {
   const { allPosts } = latest ? await db() : { allPosts: [] }
   return (
     <aside className="side">
       {latest && (
         <div className="box">
           <h3 className="side-title">Latest Posts</h3>
-          {allPosts.slice(0, 3).map((p) => (
-            <Link key={p.id} href={href(p)} className="lp">
-              {p.image && <img src={p.image} alt="" loading="lazy" />}
-              <span className="t">{decode(p.title)}</span>
-              <small>{p.author} · {fmtDate(p.date)}</small>
-            </Link>
-          ))}
+          {allPosts.slice(0, 5).map((p) => <Mini key={p.id} p={p} />)}
         </div>
       )}
       <div className="box"><Ad /></div>
+      {related.length > 0 && (
+        <div className="box">
+          <h3 className="side-title">Related Articles</h3>
+          {related.map((p) => <Mini key={p.id} p={p} />)}
+        </div>
+      )}
     </aside>
   )
 }

@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { db, decode, fmtDate, getPost, strip } from '@/lib/data'
 import { JsonLd, SITE_ID, abs, breadcrumbs, publisher } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
+import Share from '../../Share'
 import Sidebar from '../../Sidebar'
 
 type Props = { params: Promise<{ category: string; slug: string }> }
@@ -43,9 +44,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PostPage({ params }: Props) {
   const post = await find(params)
   if (!post) notFound()
-  const { categoryBySlug, allAuthors, tagBySlug } = await db()
+  const { categoryBySlug, allAuthors, tagBySlug, postsIn } = await db()
   const cat = categoryBySlug(post.category)
   const author = allAuthors.find((a) => a.id === post.authorId)
+  const inCat = postsIn(post.category) // newest first
+  const at = inCat.findIndex((p) => p.id === post.id)
+  const newer = inCat[at - 1]
+  const older = inCat[at + 1]
+  const related = inCat.filter((p) => p.id !== post.id).slice(0, 4)
+  const minutes = Math.max(1, Math.round(strip(post.content).split(/\s+/).length / 200))
   const url = abs(`/${post.category}/${post.slug}`)
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -82,28 +89,39 @@ export default async function PostPage({ params }: Props) {
         <Link href="/">Home</Link> › <Link href={`/category/${post.category}`}>{cat?.name}</Link> › <span aria-current="page">{decode(post.title)}</span>
       </nav>
       <div className="wrap layout">
-        <article className="post box">
+        <article className="post">
           <Link href={`/category/${post.category}`} className="tag">{cat?.name}</Link>
           <h1>{decode(post.title)}</h1>
-          <p className="meta">
-            {author ? <Link href={`/author/${author.slug}`}>{post.author}</Link> : post.author} · {fmtDate(post.date)}
-          </p>
+          <div className="byline">
+            <span className="avatar" aria-hidden="true">{post.author.trim().charAt(0)}</span>
+            <span className="who">{author ? <Link href={`/author/${author.slug}`}>{post.author}</Link> : post.author}</span>
+            <span className="dot">{fmtDate(post.date)}</span>
+            <span className="dot">{minutes} min read</span>
+            <Share url={url} title={decode(post.title)} />
+          </div>
           {post.video ? (
             <iframe className="video" src={`https://www.youtube.com/embed/${post.video}`} title={decode(post.title)} loading="lazy" allowFullScreen />
           ) : (
             post.image && <img src={post.image} alt={decode(post.title)} className="hero-img" fetchPriority="high" />
           )}
           <div className="content" dangerouslySetInnerHTML={{ __html: post.content }} />
-          {post.tags.length > 0 && (
-            <p className="meta">
-              Tags:{' '}
+          <div className="post-foot">
+            <p className="tags">
+              {post.tags.length > 0 && 'Tags: '}
               {post.tags.map((t) => (
                 <Link key={t} href={`/tag/${t}`} className="chip">{tagBySlug(t)?.name ?? t}</Link>
               ))}
             </p>
+            <Share url={url} title={decode(post.title)} />
+          </div>
+          {(older || newer) && (
+            <nav className="pn" aria-label="More in this category">
+              {older ? <Link href={`/${older.category}/${older.slug}`} className="prev"><small>← Previous article</small><span>{decode(older.title)}</span></Link> : <span />}
+              {newer ? <Link href={`/${newer.category}/${newer.slug}`} className="next"><small>Next article →</small><span>{decode(newer.title)}</span></Link> : <span />}
+            </nav>
           )}
         </article>
-        <Sidebar latest />
+        <Sidebar latest related={related} />
       </div>
     </div>
   )

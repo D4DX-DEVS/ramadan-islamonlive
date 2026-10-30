@@ -58,7 +58,6 @@ export default async function Home() {
               ))}
             </ul>
             <Ad />
-            <Ad />
           </aside>
         </div>
 

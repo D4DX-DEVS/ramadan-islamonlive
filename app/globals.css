@@ -210,3 +210,52 @@ aside .sec { margin-top: 0 }
 .skip:focus { top: 0 }
 :focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 2px }
 .main-nav a:focus-visible { outline-offset: -3px }
+
+/* article page: open layout on the page background, byline with share, pull quotes, prev/next */
+.post { background: none; border: 0; padding: 0; margin-bottom: 22px; animation: rise .9s var(--ease) both }
+.post h1 { font-size: clamp(1.8rem, 3.8vw, 2.6rem); margin: 14px 0 18px }
+.byline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 26px; font-size: .84rem; color: var(--mute) }
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: inline-grid; place-items: center; background: var(--night); color: #fff; font-weight: 800; font-size: .95rem }
+.who { font-weight: 700; color: var(--ink); margin-left: -8px }
+.who a:hover { color: var(--emerald) }
+.dot::before { content: ''; display: inline-block; width: 4px; height: 4px; margin-right: 10px; border-radius: 50%; background: var(--gold); vertical-align: middle }
+.share { display: flex; align-items: center; gap: 8px; margin-left: auto; font-size: .78rem }
+.share a, .share button { display: inline-grid; place-items: center; min-width: 30px; height: 30px; border-radius: 99px; border: 0; color: #fff; font: 800 .8rem/1 inherit; cursor: pointer; transition: transform .3s var(--ease), filter .3s }
+.share a:hover, .share button:hover { transform: translateY(-2px); filter: brightness(1.1) }
+.s-facebook { background: #1877f2 } .s-x { background: #111 } .s-whatsapp { background: #25a244 } .s-telegram { background: #229ed9 }
+.share .s-copy { background: var(--emerald); padding: 0 12px; font-weight: 700; font-size: .74rem }
+.post .hero-img, .post .video { border-radius: 12px }
+.content { font-size: 1.1rem; line-height: 1.95 }
+.content h2 { font-size: 1.5rem; margin: 1.8em 0 .6em }
+.content figure { margin: 1.6em 0 }
+.content figcaption, .content .wp-caption-text { font-size: .8rem; color: var(--mute); margin-top: 8px; text-align: left }
+.content blockquote { position: relative; margin: 2em 0; padding: 26px 28px 26px 84px; border: 0; border-radius: 12px; background: #fdf3dc var(--star); font-family: var(--serif); font-size: 1.12rem; font-weight: 700; line-height: 1.7; color: var(--night) }
+.content blockquote::before { content: '\201C'; position: absolute; left: 24px; top: 6px; font: 800 5rem/1 var(--serif); color: var(--gold) }
+.content blockquote p { margin: 0 }
+.post-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); font-size: .84rem; color: var(--mute) }
+.post-foot .tags { margin: 0 }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 28px }
+.pn a { display: block; padding: 16px 20px; background: #fff; border: 1px solid var(--line); border-radius: 12px; transition: transform .4s var(--ease), border-color .3s, box-shadow .4s }
+.pn a:hover { transform: translateY(-3px); border-color: var(--gold); box-shadow: 0 16px 30px -20px #0a2a1f99 }
+.pn small { display: block; color: var(--gold-lo); font-weight: 700; margin-bottom: 4px }
+.pn span { display: block; font-family: var(--serif); font-weight: 700; line-height: 1.45 }
+.pn .next { text-align: right }
+
+/* sidebar: compact thumbnail rows */
+.lp { display: grid; grid-template-columns: 84px 1fr; gap: 14px; align-items: center; margin-bottom: 16px }
+.lp img { width: 84px; height: 64px; aspect-ratio: auto; border-radius: 8px }
+.lp .t { margin-top: 0; font-size: .86rem }
+.lp small { display: block; margin-top: 3px }
+
+/* footer: brand, quick links, more */
+.site-footer { text-align: left }
+.foot { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 40px; max-width: 1200px; margin: 0 auto; padding-bottom: 32px }
+.foot p { color: #cfd8d2; max-width: 36ch; margin: 14px 0 0; line-height: 1.7 }
+.foot h4 { font-family: var(--serif); font-size: 1rem; margin: 0 0 14px; color: #fff }
+.foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px }
+.site-footer .foot a { color: #e8eee9; transition: color .3s }
+.site-footer .foot a:hover { color: var(--gold-hi) }
+.foot-bar { max-width: 1200px; margin: 0 auto; padding-top: 20px; border-top: 1px solid #ffffff1f; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; font-size: .78rem }
+.foot-bar .admin-btn { margin: 0 }
+@media (max-width: 900px) { .foot { grid-template-columns: 1fr 1fr } .foot > :first-child { grid-column: 1 / -1 } .share { margin-left: 0 } }
+@media (max-width: 560px) { .pn { grid-template-columns: 1fr } .pn .next { text-align: left } .foot { grid-template-columns: 1fr } }

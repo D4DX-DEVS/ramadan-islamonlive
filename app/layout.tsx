@@ -56,14 +56,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </nav>
         <main id="main">{children}</main>
         <footer className="site-footer">
-          <img src="/site/onlive-logo-w.png" alt="islamonlive" width={207} height={59} />
-          <div className="links">
-            {nav.map(([label, to]) => <Link key={to} href={to}>{label}</Link>)}
+          <div className="foot">
+            <div>
+              <img src="/site/onlive-logo-w.png" alt="islamonlive" width={207} height={59} />
+              <p>The one and only Comprehensive Ramadan portal in Malayalam.</p>
+            </div>
+            <div>
+              <h4>Quick links</h4>
+              <ul>{nav.map(([label, to]) => <li key={to}><Link href={to}>{label}</Link></li>)}</ul>
+            </div>
+            <div>
+              <h4>More</h4>
+              <ul>
+                <li><a href="/feed.xml">RSS feed</a></li>
+                <li><a href="/sitemap.xml">Sitemap</a></li>
+                <li><a href={APP_URL} target="_blank" rel="noopener">Thafheem ul Quran app</a></li>
+              </ul>
+            </div>
           </div>
-          <p>
-            Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
-          </p>
-          <a className="admin-btn" href="/admin">Admin</a>
+          <div className="foot-bar">
+            <span>
+              Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
+            </span>
+            <a className="admin-btn" href="/admin">Admin</a>
+          </div>
         </footer>
       </body>
     </html>
