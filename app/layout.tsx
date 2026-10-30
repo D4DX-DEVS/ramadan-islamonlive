@@ -8,7 +8,6 @@ import './globals.css'
 const font = Anek_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap' })
 const serif = Noto_Serif_Malayalam({ subsets: ['malayalam', 'latin'], display: 'swap', variable: '--font-serif' })
 
-export const dynamic = 'force-static' // pages are cached and refreshed by the admin (revalidatePath)
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
   description: 'The one and only Comprehensive Ramadan portal in Malayalam',
 }
 
-export const viewport: Viewport = { themeColor: '#0b4a33' }
+export const viewport: Viewport = { themeColor: '#3a2412' }
 
 const nav = [
   ['Home', '/'],
@@ -39,7 +38,7 @@ const nav = [
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ml">
-      <body className={`${font.className} ${serif.variable}`}>
+      <body className={`${font.className} ${serif.variable}`} id="top">
         <a href="#main" className="skip">Skip to content</a>
         <header className="site-header wrap">
           <Link href="/" className="logo">
@@ -51,7 +50,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </header>
         <nav className="main-nav" aria-label="Main">
           <div className="wrap">
-            <NavLinks items={nav} />
+            <div className="nav-links"><NavLinks items={nav} /></div>
+            <form className="search" action="/search" role="search">
+              <input type="search" name="q" placeholder="Search…" aria-label="Search the site" />
+              <button type="submit" aria-label="Search">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+              </button>
+            </form>
           </div>
         </nav>
         <main id="main">{children}</main>
@@ -78,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span>
               Copyright © 2026 | islamonlive.in | Powered by <a href="https://d4dx.co/" target="_blank" rel="noopener">D4DX</a>
             </span>
-            <a className="admin-btn" href="/admin">Admin</a>
+            <span><a href="#top">Back to top ↑</a> &nbsp; <a className="admin-btn" href="/admin">Admin</a></span>
           </div>
         </footer>
       </body>

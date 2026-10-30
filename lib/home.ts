@@ -5,14 +5,12 @@ export async function homeData() {
   const { allPosts, postsIn } = await db()
   const pick = (slugs: string[]) => slugs.map((s) => allPosts.find((p) => p.slug === s)).filter((p): p is Post => !!p)
   return {
-    hero: postsIn('naseehat').slice(0, 4),
+    hero: postsIn('naseehat').slice(0, 5),
     articles: pick([
       'the-preaching-of-islam',
       'the-last-ten-days-of-ramadan-2',
       'dont-hold-hatred-and-grudges',
       'winners-of-ramadan',
-      'losers-of-ramadan',
-      'stealing-away-the-good-things-of-fasting',
     ]),
     columns: pick(['prophets-smile', 'the-message-of-ramadan-fasts', 'fasting-period-and-time']),
     features: pick([

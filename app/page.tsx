@@ -1,19 +1,10 @@
 import Link from 'next/link'
 import { decode } from '@/lib/data'
-import { APP_URL } from '@/lib/site'
 import { homeData } from '@/lib/home'
 import { JsonLd, ORG_ID, SITE_ID, SITE_NAME, abs, publisher } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
 import Placeholder from './Placeholder'
-import { Card, Tile, href } from './PostCard'
-
-const Title = ({ children }: { children: React.ReactNode }) => <h2 className="sec">{children}</h2>
-
-const Ad = () => (
-  <a href={APP_URL} target="_blank" rel="noopener" className="ad">
-    <img src="/site/new-1-scaled.jpg" alt="Thafheem ul Quran app" loading="lazy" />
-  </a>
-)
+import { ArticleCard, Card, Head, Lead, Mini, VideoCard, href } from './PostCard'
 
 export default async function Home() {
   const { articles, columns, features, hero, qa, quran, synopsis, videos, zakat } = await homeData()
@@ -25,86 +16,71 @@ export default async function Home() {
         { '@type': 'WebPage', '@id': `${SITE_URL}/#webpage`, url: abs('/'), name: SITE_NAME, isPartOf: { '@id': SITE_ID }, inLanguage: 'ml' },
       ] }} />
       <h1 className="sr-only">Ramadan.Islamonlive.in: Malayalam Ramadan portal</h1>
+
       <section className="wrap hero">
-        {hero.map((p, i) => <Tile key={p.id} post={p} badge priority={i === 0} eager />)}
+        {hero.map((p, i) => <Lead key={p.id} post={p} variant={i === 0 ? 'hero-lead' : 'hero'} priority={i === 0} eager />)}
       </section>
 
       <section className="wrap">
-        <Title>Articles</Title>
-        <div className="grid3">{articles.map((p) => <Card key={p.id} post={p} />)}</div>
+        <Head icon="doc" title="Articles" href="/category/articles" />
+        <div className="g4">{articles.map((p) => <ArticleCard key={p.id} post={p} />)}</div>
       </section>
 
-      <div className="band">
-        <div className="wrap split">
-          <div>
-            <Title>Columns</Title>
-            {columns[0] && <Tile post={columns[0]} className="big" />}
-            <div className="grid2 gap-top">{columns.slice(1).map((p) => <Tile key={p.id} post={p} className="small" />)}</div>
-
-            <Title>Features</Title>
-            <div className="grid2">{features.map((p) => <Card key={p.id} post={p} />)}</div>
+      <section className="wrap duo">
+        <div>
+          <Head icon="pen" title="Columns" href="/category/columns" />
+          <div className="cols">
+            {columns[0] && <Lead post={columns[0]} variant="col" />}
+            <div className="card rows">{columns.slice(1).map((p) => <Mini key={p.id} post={p} />)}</div>
           </div>
-
-          <aside>
-            <h2 className="sec">Quthuba Synopsis</h2>
-            <ul className="thumbs">
-              {synopsis.map((s) => (
-                <li key={s.slug}>
-                  <Link href={href(s.post)}>
-                    <img src={`/site/${s.img}`} alt="" />
-                    <span>{decode(s.post.title)}</span>
-                  </Link>
-                  <small>By {s.by}</small>
-                </li>
-              ))}
-            </ul>
-            <Ad />
-          </aside>
         </div>
+        <aside>
+          <Head icon="dome" title="Quthuba Synopsis" href="/category/quthuba-synopsis" />
+          <div className="card rows">
+            {synopsis.map((s) => <Mini key={s.slug} post={{ ...s.post, image: `/site/${s.img}` }} sub={`By ${s.by}`} round />)}
+          </div>
+        </aside>
+      </section>
 
-        <div className="wrap triple">
-          <div className="z">
-            <Title>Zakat</Title>
-            {zakat[0] && <Tile post={zakat[0]} className="big" />}
-            <div className="grid2 gap-top">{zakat.slice(1).map((p) => <Tile key={p.id} post={p} className="small" />)}</div>
+      <section className="wrap">
+        <Head icon="star" title="Features" href="/category/features" />
+        <div className="g4">{features.map((p) => <Card key={p.id} post={p} />)}</div>
+      </section>
+
+      <section className="wrap trio">
+        <div>
+          <Head icon="coin" title="Zakat" href="/category/zakat" />
+          <div className="stack">
+            {zakat[0] && <Lead post={zakat[0]} variant="stack" />}
+            <div className="rows">{zakat.slice(1).map((p) => <Mini key={p.id} post={p} />)}</div>
           </div>
-          <div className="q">
-            <Title>Quran / Hadith</Title>
-            {quran[0] && <Tile post={quran[0]} className="big" />}
-            <div className="grid2 gap-top">{quran.slice(1, 3).map((p) => <Tile key={p.id} post={p} className="small" />)}</div>
+        </div>
+        <div>
+          <Head icon="book" title="Quran / Hadith" href="/category/quran-hadith" />
+          <div className="stack">
+            {quran[0] && <Lead post={quran[0]} variant="stack" />}
+            <div className="rows">{quran.slice(1, 3).map((p) => <Mini key={p.id} post={p} />)}</div>
           </div>
-          <div className="a">
-            <Title>QA</Title>
+        </div>
+        <div>
+          <Head icon="ask" title="QA" href="/category/fiqh-fatwa" />
+          <div className="stack">
             {qa[0] && (
               <Link href={href(qa[0])}>
                 {qa[0].image ? <img src={qa[0].image} alt="" className="qa-img" loading="lazy" /> : <Placeholder className="qa-ph" />}
               </Link>
             )}
             <ul className="qa">
-              {qa.map((p) => (
-                <li key={p.id}><Link href={href(p)}>{decode(p.title)}</Link></li>
-              ))}
+              {qa.map((p) => <li key={p.id}><Link href={href(p)}>{decode(p.title)}</Link></li>)}
             </ul>
           </div>
-          <div className="v">
-            <Title>Videos</Title>
-            {videos[0] && (
-              <div className="vcard">
-                <iframe src={`https://www.youtube.com/embed/${videos[0].yt}`} title={decode(videos[0].post.title)} loading="lazy" allowFullScreen />
-                <Link href={href(videos[0].post)} className="t">{decode(videos[0].post.title)}</Link>
-              </div>
-            )}
-            <div className="grid2 gap-top">
-              {videos.slice(1).map((v) => (
-                <div key={v.slug} className="vcard">
-                  <iframe src={`https://www.youtube.com/embed/${v.yt}`} title={decode(v.post.title)} loading="lazy" allowFullScreen />
-                  <Link href={href(v.post)} className="t">{decode(v.post.title)}</Link>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
-      </div>
+      </section>
+
+      <section className="wrap">
+        <Head icon="play" title="Videos" href="/category/videos" />
+        <div className="g3">{videos.map((v) => <VideoCard key={v.slug} post={v.post} yt={v.yt} />)}</div>
+      </section>
     </>
   )
 }
