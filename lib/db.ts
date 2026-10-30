@@ -1,4 +1,4 @@
-// Content lives in Cloudflare D1 (table `items`); Vercel reaches it through the D1 HTTP API.
+// Content lives in Cloudflare D1 (table `items`); the build reads it through the D1 HTTP API.
 const url = () =>
   `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/d1/database/${process.env.D1_DATABASE_ID}/query`
 
