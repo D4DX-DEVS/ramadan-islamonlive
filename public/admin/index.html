@@ -166,7 +166,7 @@
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important } }
 
   @media (max-width: 760px) {
-    .tab span:empty { display: none }
+    .shell { grid-template-rows: auto 1fr }
     .tab { padding: 8px 10px }
     .head h1 { font-size: 1.5rem }
     main { padding: 18px 14px }
@@ -268,7 +268,7 @@ async function start() {
 
 function shell(kind, ...content) {
   const tabs = Object.entries(KINDS).map(([k, v]) =>
-    h('button', { className: 'tab' + (k === kind ? ' on' : ''), onclick: () => go('#/' + k) }, v.label, h('span', {}, cache[k] ? cache[k].length : '')))
+    h('button', { className: 'tab' + (k === kind ? ' on' : ''), onclick: () => go('#/' + k) }, v.label, cache[k] ? h('span', {}, cache[k].length) : null))
   app.replaceChildren(h('div', { className: 'shell' },
     h('aside', { className: 'side' }, h('div', { className: 'brand' }, 'Admin', h('small', {}, 'Ramadan.Islamonlive.in')), ...tabs, h('div', { className: 'sp' }),
       h('a', { href: '/', target: '_blank', rel: 'noopener' }, 'View site ↗'),
