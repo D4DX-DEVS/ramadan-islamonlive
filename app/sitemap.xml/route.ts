@@ -1,7 +1,7 @@
 import { MIN_INDEXABLE, db } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static' // cached; the admin's revalidatePath('/sitemap.xml') refreshes it after every edit
+export const dynamic = 'force-dynamic' // read from the cached content on each request; a static copy did not refresh after admin edits
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
