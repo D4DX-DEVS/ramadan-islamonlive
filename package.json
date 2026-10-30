@@ -4,8 +4,8 @@
   "scripts": {
     "fetch": "node --env-file-if-exists=.env scripts/fetch.mjs",
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "node scripts/redirects.mjs && next build",
+    "deploy": "npm run build && npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main",
     "images": "node --env-file-if-exists=.env scripts/images.mjs",
     "videos": "node --env-file-if-exists=.env scripts/videos.mjs",
     "r2:upload": "node --env-file-if-exists=.env scripts/r2-upload.mjs",

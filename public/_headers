@@ -1,0 +1,22 @@
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/uploads/*
+  Cache-Control: public, max-age=2592000
+
+/site/*
+  Cache-Control: public, max-age=2592000
+
+# the *.pages.dev address duplicates the real domain, so keep it out of search results
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+/admin
+  Cache-Control: no-store
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex
+
+/admin/*
+  Cache-Control: no-store
+  X-Frame-Options: DENY
+  X-Robots-Tag: noindex

@@ -1,7 +1,7 @@
 import { MIN_INDEXABLE, db } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-dynamic' // read from the cached content on each request; a static copy did not refresh after admin edits
+export const dynamic = 'force-static' // rebuilt on every deploy
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 

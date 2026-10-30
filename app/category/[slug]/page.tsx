@@ -4,7 +4,8 @@ import { db } from '@/lib/data'
 import { JsonLd, SITE_ID, abs, breadcrumbs } from '@/lib/seo'
 import PostList from '../../PostList'
 
-// Built at deploy time and cached; new or edited items render on first visit and the admin refreshes the rest.
+// Every page is built at deploy time (output: 'export'); an admin save starts a rebuild.
+export const dynamicParams = false
 export const generateStaticParams = async () => (await db()).allCategories.map((c) => ({ slug: c.slug }))
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

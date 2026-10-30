@@ -416,13 +416,13 @@ async function edit(kind, key) {
       const body = Object.fromEntries(Object.entries(get).map(([f, fn]) => [f, fn()]))
       body[kind === 'authors' || kind === 'tags' ? 'name' : 'title'] = title.value
       await api(isNew ? 'items/' + kind : `items/${kind}/${encodeURIComponent(key)}`, isNew ? 'POST' : 'PUT', body)
-      dirty = false; toast('Saved. The change is live on the site.'); await refresh(kind === 'authors' || kind === 'tags'); go('#/' + kind)
+      dirty = false; toast('Saved. The site is rebuilding and the change will be live in about 2 minutes.'); await refresh(kind === 'authors' || kind === 'tags'); go('#/' + kind)
     } catch (e) { err.replaceChildren(h('div', { className: 'banner' }, e.message)); toast(e.message, true); saveBtn.disabled = false; saveBtn.textContent = isNew ? 'Create' : 'Save changes' }
   }
   saveBtn.onclick = save
   const dlg = h('dialog', {}, h('p', {}, `Delete this ${KINDS[kind].one} for good? It disappears from the site straight away.`),
     h('div', { className: 'acts' }, h('button', { className: 'btn', onclick: () => dlg.close() }, 'Keep it'),
-      h('button', { className: 'btn danger', onclick: async () => { dlg.close(); try { await api(`items/${kind}/${encodeURIComponent(key)}`, 'DELETE'); dirty = false; toast('Deleted'); await refresh(kind === 'authors' || kind === 'tags'); go('#/' + kind) } catch (e) { toast(e.message, true) } } }, 'Delete')))
+      h('button', { className: 'btn danger', onclick: async () => { dlg.close(); try { await api(`items/${kind}/${encodeURIComponent(key)}`, 'DELETE'); dirty = false; toast('Deleted. The site is rebuilding.'); await refresh(kind === 'authors' || kind === 'tags'); go('#/' + kind) } catch (e) { toast(e.message, true) } } }, 'Delete')))
   const actions = h('div', { className: 'card' }, h('div', { className: 'savebar' }, saveBtn,
     h('button', { className: 'btn', onclick: () => go('#/' + kind) }, 'Cancel'),
     isNew ? null : h('button', { className: 'btn danger', onclick: () => dlg.showModal() }, 'Delete')))

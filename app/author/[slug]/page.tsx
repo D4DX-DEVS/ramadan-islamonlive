@@ -6,7 +6,8 @@ import PostList from '../../PostList'
 
 const find = async (params: Promise<{ slug: string }>) => (await db()).authorBySlug(decodeURIComponent((await params).slug))
 
-// Built at deploy time and cached; new or edited items render on first visit and the admin refreshes the rest.
+// Every page is built at deploy time (output: 'export'); an admin save starts a rebuild.
+export const dynamicParams = false
 export const generateStaticParams = async () => (await db()).allAuthors.map((a) => ({ slug: a.slug }))
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
