@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: 'The one and only Comprehensive Ramadan portal in Malayalam',
 }
 
+export const dynamic = 'force-dynamic' // pages render per request from D1; worker.ts keeps the rendered result
+
 export const viewport: Viewport = { themeColor: '#3a2412' }
 
 const nav = [

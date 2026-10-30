@@ -9,10 +9,6 @@ type Props = { params: Promise<{ slug: string }> }
 
 // Old WordPress video-gallery URLs (/aiovg_videos/<slug>), kept so existing links and search results still resolve.
 
-// Every page is built at deploy time (output: 'export'); an admin save starts a rebuild.
-export const dynamicParams = false
-export const generateStaticParams = async () => (await db()).allVideos.map((v) => ({ slug: v.slug }))
-
 const find = async (params: Props['params']) => {
   const slug = decodeURIComponent((await params).slug)
   return (await db()).allVideos.find((v) => v.slug === slug)

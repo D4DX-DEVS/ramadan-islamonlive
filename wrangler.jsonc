@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ramadan",
+  "main": "worker.ts",
+  "compatibility_date": "2025-12-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "ramadan" }],
+  // ids are not secret; wrangler.jsonc cannot read .env, so the D1 id from there is copied here
+  "d1_databases": [{ "binding": "DB", "database_name": "ramadan-admin", "database_id": "b5b13952-539d-4173-be02-7a0d3d0b017d" }],
+  // holds the page cache (cache/...) written by worker.ts
+  "r2_buckets": [{ "binding": "UPLOADS", "bucket_name": "ramdan" }],
+  "vars": { "SITE_URL": "https://ramadan.islamonlive.in" },
+  // fills the page cache (worker.ts): renders a few pages nobody has visited yet on every run
+  "triggers": { "crons": ["*/5 * * * *"] }
+}

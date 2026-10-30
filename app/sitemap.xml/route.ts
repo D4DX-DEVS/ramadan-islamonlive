@@ -1,7 +1,7 @@
 import { MIN_INDEXABLE, db } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static' // rebuilt on every deploy
+export const dynamic = 'force-dynamic' // rendered from D1; worker.ts stores it
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 

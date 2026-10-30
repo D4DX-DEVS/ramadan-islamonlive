@@ -4,14 +4,18 @@
   "scripts": {
     "fetch": "node --env-file-if-exists=.env scripts/fetch.mjs",
     "dev": "next dev",
-    "build": "node scripts/redirects.mjs && next build",
-    "deploy": "npm run build && npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main",
+    "build": "next build",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && node scripts/strip-env.mjs && node --env-file=.env node_modules/@opennextjs/cloudflare/dist/cli/index.js deploy && node --env-file=.env scripts/purge-cache.mjs",
+    "cf": "node --env-file=.env node_modules/wrangler/bin/wrangler.js",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "images": "node --env-file-if-exists=.env scripts/images.mjs",
     "videos": "node --env-file-if-exists=.env scripts/videos.mjs",
     "r2:upload": "node --env-file-if-exists=.env scripts/r2-upload.mjs",
     "d1:seed": "node --env-file-if-exists=.env scripts/d1.mjs seed"
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.14",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "next": "^16.4.3",
@@ -20,6 +24,7 @@
     "typescript": "^7.0.2"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.1157.0"
+    "@aws-sdk/client-s3": "^3.1157.0",
+    "wrangler": "^4.156.0"
   }
 }

@@ -9,7 +9,7 @@ export default function SearchResults() {
   const q = (useSearchParams().get('q') ?? '').trim().toLowerCase().slice(0, 100)
   const [items, setItems] = useState<Item[] | null>(null)
   useEffect(() => {
-    fetch('/search-index.json').then((r) => r.json()).then(setItems, () => setItems([]))
+    fetch('/search-index.json').then((r) => r.json() as Promise<Item[]>).then(setItems, () => setItems([]))
   }, [])
   const hits = q && items ? items.filter((p) => `${p.t} ${p.e} ${p.a}`.toLowerCase().includes(q)).slice(0, 60) : []
   const note = !q ? 'Type a word in the search box above.' : !items ? 'Searching…' : hits.length ? `${hits.length} result${hits.length === 1 ? '' : 's'}.` : 'No posts matched your search.'

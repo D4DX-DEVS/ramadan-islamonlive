@@ -1,12 +1,11 @@
 name: Build and deploy
 
-# Runs on every push to main and whenever the admin saves (the Pages Function calls workflow_dispatch).
+# Code changes only: the pages render live from D1, so admin edits never need a deploy.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Several admin saves in a row: let the running build finish, then run only the newest request.
 concurrency:
   group: deploy
   cancel-in-progress: false
@@ -16,9 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_SITE_URL: https://ramadan.islamonlive.in
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }} # needs Workers Scripts Edit, R2 and D1 access
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      D1_DATABASE_ID: ${{ vars.D1_DATABASE_ID }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,10 +24,7 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci
-      # Without the Cloudflare secrets the job does nothing instead of failing.
-      - name: Build (reads all content from D1)
-        if: env.CLOUDFLARE_API_TOKEN != ''
-        run: npm run build
-      - name: Deploy to Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != ''
-        run: npx wrangler pages deploy out --project-name=ramadan-islamonlive --branch=main
+      - run: npx opennextjs-cloudflare build
+      - run: npx opennextjs-cloudflare deploy
+      # stored pages name the CSS files of the build that rendered them, so every deploy marks them out of date
+      - run: node scripts/purge-cache.mjs

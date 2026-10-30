@@ -10,3 +10,5 @@ out
 .vercel
 .env*
 public/_redirects
+.open-next
+.dev.vars

@@ -1,7 +1,7 @@
 import { decode, latestFull, strip } from '@/lib/data'
 import { SITE_URL } from '@/lib/site'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 

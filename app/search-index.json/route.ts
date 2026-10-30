@@ -1,6 +1,6 @@
 import { db, decode, fmtLong, strip } from '@/lib/data'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 // Small index the search page filters in the browser: title, url, author, date, excerpt, image.
 export async function GET() {

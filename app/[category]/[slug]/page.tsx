@@ -10,10 +10,6 @@ import Sidebar from '../../Sidebar'
 
 type Props = { params: Promise<{ category: string; slug: string }> }
 
-// Every page is built at deploy time (output: 'export'); an admin save starts a rebuild.
-export const dynamicParams = false
-export const generateStaticParams = async () => (await db()).allPosts.map((p) => ({ category: p.category, slug: p.slug }))
-
 const find = async (params: Props['params']) => {
   const { category, slug: s } = await params
   const slug = decodeURIComponent(s)

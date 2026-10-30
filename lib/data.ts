@@ -1,4 +1,4 @@
-import { unstable_cache } from 'next/cache'
+import { cache } from 'react'
 import { query } from './db'
 import { MEDIA_URL, WP_URL } from './site'
 
@@ -35,8 +35,8 @@ const cleanContent = (html: string) => media(html.replaceAll(`${WP_URL}/`, '/'))
 const rows = async <T>(kind: string, col = 'data') =>
   (await query(`SELECT ${col} AS data FROM items WHERE kind = ?`, [kind])).map((r) => JSON.parse(r.data) as T)
 
-// Everything except post bodies (~4 MB; a page fetches only its own). Refreshed by revalidateTag('content').
-const load = unstable_cache(
+// Everything except post bodies (~4 MB; a page fetches only its own), read once per request.
+const load = cache(
   async () => {
     const [posts, categories, tags, authors, videos] = await Promise.all([
       rows<Post>('posts', "json_remove(data, '$.content')"),
@@ -48,8 +48,7 @@ const load = unstable_cache(
     posts.sort((a, b) => b.date.localeCompare(a.date))
     return { posts, categories, tags, authors, videos }
   },
-  ['content-meta'],
-  { tags: ['content'] },
+
 )
 
 export async function db() {
@@ -73,15 +72,14 @@ export async function db() {
   }
 }
 
-const postById = unstable_cache(
+const postById = cache(
   async (id: number): Promise<Post | null> => {
     const r = await query("SELECT data FROM items WHERE kind = 'posts' AND key = ?", [String(id)]) // primary-key hit: reads one row
     if (!r[0]) return null
     const p = JSON.parse(r[0].data) as Post
     return { ...p, slug: decodeURIComponent(p.slug), content: cleanContent(p.content), image: p.image && media(p.image) }
   },
-  ['post'],
-  { tags: ['content'] },
+
 )
 
 /** One post with its body. `slug` is the decoded form. The id comes from the cached post list, so D1 is read by key, not scanned. */
@@ -91,11 +89,10 @@ export async function getPost(category: string, slug: string): Promise<Post | nu
 }
 
 /** The newest posts with bodies, for the RSS feed. */
-export const latestFull = unstable_cache(
+export const latestFull = cache(
   async (n: number) =>
     (await query("SELECT data FROM items WHERE kind = 'posts' ORDER BY json_extract(data, '$.date') DESC LIMIT ?", [n])).map((r) => JSON.parse(r.data) as Post),
-  ['latest-full'],
-  { tags: ['content'] },
+
 )
 
 // Tag pages with fewer posts than this are noindex and left out of the sitemap.
