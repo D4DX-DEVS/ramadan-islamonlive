@@ -183,7 +183,7 @@ aside .sec { margin-top: 0 }
   .hero { grid-template-columns: 1fr 1fr; grid-template-rows: none }
   .hero .tile { aspect-ratio: 16/10 }
   .hero .tile:nth-child(1) { grid-column: 1 / -1; grid-row: auto }
-  .hero .tile:nth-child(4) { grid-column: auto }
+  .hero .tile:nth-child(4) { grid-column: 1 / -1; aspect-ratio: 21 / 9 }
   .split, .layout { grid-template-columns: 1fr }
   .grid3 { grid-template-columns: 1fr 1fr }
   .triple { grid-template-columns: 1fr; grid-template-areas: "z" "q" "a" "v" }
@@ -307,7 +307,7 @@ aside .sec { margin-top: 0 }
   .main-nav .wrap { padding-right: 36px; scroll-snap-type: x proximity; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent) }
   .main-nav a { padding: 14px 13px; scroll-snap-align: start }
   .hero { grid-template-columns: 1fr 1fr; gap: 10px }
-  .hero .tile:nth-child(1), .hero .tile:nth-child(4) { grid-column: 1 / -1 }
+  .hero .tile:nth-child(1), .hero .tile:nth-child(4) { grid-column: 1 / -1; aspect-ratio: 16 / 10 }
   .hero .tile:nth-child(2), .hero .tile:nth-child(3) { aspect-ratio: 4 / 5 }
   .hero .tile .t { font-size: .92rem }
   .hero .tile:nth-child(1) .t { font-size: 1.4rem }
