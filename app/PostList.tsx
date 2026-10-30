@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Post, decode, fmtDate } from '@/lib/data'
 import { href } from './PostCard'
+import Placeholder from './Placeholder'
 import Sidebar from './Sidebar'
 
 /** Archive page body: title bar, list of big tiles, sidebar (category / tag / author pages). */
@@ -17,7 +18,7 @@ export default function PostList({ title, posts, intro }: { title: string; posts
           <div className="list">
             {posts.map((p) => (
               <Link key={p.id} href={href(p)} className="tile big">
-                {p.image && <img src={p.image} alt="" loading="lazy" />}
+                {p.image ? <img src={p.image} alt="" loading="lazy" /> : <Placeholder />}
                 <span className="shade" />
                 <span className="caption">
                   <small>{p.author} · {fmtDate(p.date)}</small>

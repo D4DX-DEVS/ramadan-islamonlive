@@ -4,6 +4,7 @@ import { APP_URL } from '@/lib/site'
 import { homeData } from '@/lib/home'
 import { JsonLd, ORG_ID, SITE_ID, SITE_NAME, abs, publisher } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
+import Placeholder from './Placeholder'
 import { Card, Tile, href } from './PostCard'
 
 const Title = ({ children }: { children: React.ReactNode }) => <h2 className="sec">{children}</h2>
@@ -74,8 +75,10 @@ export default async function Home() {
           </div>
           <div className="a">
             <Title>QA</Title>
-            {qa[0]?.image && (
-              <Link href={href(qa[0])}><img src={qa[0].image} alt="" className="qa-img" loading="lazy" /></Link>
+            {qa[0] && (
+              <Link href={href(qa[0])}>
+                {qa[0].image ? <img src={qa[0].image} alt="" className="qa-img" loading="lazy" /> : <Placeholder className="qa-ph" />}
+              </Link>
             )}
             <ul className="qa">
               {qa.map((p) => (

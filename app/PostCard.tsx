@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Post, db, decode } from '@/lib/data'
+import Placeholder from './Placeholder'
 
 export const href = (p: Post) => `/${p.category}/${p.slug}`
 
@@ -8,7 +9,7 @@ export async function Tile({ post, badge, className = '', priority }: { post: Po
   const { categoryBySlug } = badge ? await db() : { categoryBySlug: () => undefined }
   return (
     <Link href={href(post)} className={`tile ${className}`}>
-      {post.image && <img src={post.image} alt="" {...(priority ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} />}
+      {post.image ? <img src={post.image} alt="" {...(priority ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} /> : <Placeholder />}
       <span className="shade" />
       <span className="caption">
         {badge && <span className="badge">{categoryBySlug(post.category)?.name}</span>}
@@ -22,7 +23,7 @@ export async function Tile({ post, badge, className = '', priority }: { post: Po
 export function Card({ post }: { post: Post }) {
   return (
     <Link href={href(post)} className="acard">
-      {post.image && <img src={post.image} alt="" loading="lazy" />}
+      {post.image ? <img src={post.image} alt="" loading="lazy" /> : <Placeholder />}
       <span className="t">{decode(post.title)}</span>
     </Link>
   )

@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { db, decode, fmtDate, getPost, strip } from '@/lib/data'
 import { JsonLd, SITE_ID, abs, breadcrumbs, publisher } from '@/lib/seo'
 import { SITE_URL } from '@/lib/site'
+import Placeholder from '../../Placeholder'
 import Share from '../../Share'
 import Sidebar from '../../Sidebar'
 
@@ -102,7 +103,7 @@ export default async function PostPage({ params }: Props) {
           {post.video ? (
             <iframe className="video" src={`https://www.youtube.com/embed/${post.video}`} title={decode(post.title)} loading="lazy" allowFullScreen />
           ) : (
-            post.image && <img src={post.image} alt={decode(post.title)} className="hero-img" fetchPriority="high" />
+            post.image ? <img src={post.image} alt={decode(post.title)} className="hero-img" fetchPriority="high" /> : <Placeholder className="hero-ph" />
           )}
           <div className="content" dangerouslySetInnerHTML={{ __html: post.content }} />
           <div className="post-foot">

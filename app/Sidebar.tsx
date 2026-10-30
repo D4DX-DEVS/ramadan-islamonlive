@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { db, decode, fmtDate } from '@/lib/data'
 import { APP_URL } from '@/lib/site'
 import { href } from './PostCard'
+import Placeholder from './Placeholder'
 
 export const Ad = () => (
   <a href={APP_URL} target="_blank" rel="noopener" className="ad">
@@ -13,7 +14,7 @@ import type { Post } from '@/lib/data'
 
 const Mini = ({ p }: { p: Post }) => (
   <Link href={href(p)} className="lp">
-    {p.image && <img src={p.image} alt="" loading="lazy" width={84} height={64} />}
+    {p.image ? <img src={p.image} alt="" loading="lazy" width={84} height={64} /> : <Placeholder />}
     <span>
       <span className="t">{decode(p.title)}</span>
       <small>{fmtDate(p.date)}</small>

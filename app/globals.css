@@ -259,3 +259,19 @@ aside .sec { margin-top: 0 }
 .foot-bar .admin-btn { margin: 0 }
 @media (max-width: 900px) { .foot { grid-template-columns: 1fr 1fr } .foot > :first-child { grid-column: 1 / -1 } .share { margin-left: 0 } }
 @media (max-width: 560px) { .pn { grid-template-columns: 1fr } .pn .next { text-align: left } .foot { grid-template-columns: 1fr } }
+
+/* image placeholder: green with a faint two-logo watermark */
+.ph { display: grid; place-content: center; justify-items: center; gap: 8px; background: var(--star) center / 72px, linear-gradient(135deg, var(--night), var(--emerald-2)); overflow: hidden }
+.ph img { width: 44%; max-width: 150px; height: auto; opacity: .5 }
+.ph img:first-child { filter: brightness(0) invert(1) }
+.tile > .ph { position: absolute; inset: 0 }
+.acard > .ph { aspect-ratio: 16/10; width: 100% }
+.lp > .ph { width: 84px; height: 64px; border-radius: 8px }
+.lp .ph img { width: 60%; max-width: none }
+.lp .ph img:last-child { display: none }
+.qa-ph { aspect-ratio: 16/10; width: 100%; border-radius: 6px 6px 0 0 }
+.hero-ph { aspect-ratio: 21/9; width: 100%; margin-bottom: 28px; border-radius: 12px }
+.tile .ph img { position: static; width: 46%; max-width: 150px; height: auto; object-fit: contain; filter: none; transform: none }
+.tile .ph img:first-child { filter: brightness(0) invert(1) }
+.tile:hover .ph img { transform: none }
+.tile .ph { padding-bottom: 36px }
