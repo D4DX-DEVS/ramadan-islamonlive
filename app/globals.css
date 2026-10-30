@@ -297,3 +297,38 @@ aside .sec { margin-top: 0 }
 .qa li:hover { padding-left: 0 }
 @media (pointer: coarse) { .share a, .share button { min-width: 44px; height: 44px } }
 @media (max-width: 560px) { .share { width: 100%; margin-left: 0 } .byline { row-gap: 12px } }
+
+/* mobile pass: compact header, scroll hint on the nav, denser two-column grids, tighter footer */
+@media (max-width: 560px) {
+  .wrap { padding: 0 16px }
+  .site-header { padding-block: 10px }
+  .logo img { height: 56px }
+  main { margin-top: 16px }
+  .main-nav .wrap { padding-right: 36px; scroll-snap-type: x proximity; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 34px), transparent) }
+  .main-nav a { padding: 14px 13px; scroll-snap-align: start }
+  .hero { grid-template-columns: 1fr 1fr; gap: 10px }
+  .hero .tile:nth-child(1), .hero .tile:nth-child(4) { grid-column: 1 / -1 }
+  .hero .tile:nth-child(2), .hero .tile:nth-child(3) { aspect-ratio: 4 / 5 }
+  .hero .tile .t { font-size: .92rem }
+  .hero .tile:nth-child(1) .t { font-size: 1.4rem }
+  .grid3, .grid2 { grid-template-columns: 1fr 1fr; gap: 12px }
+  .list { grid-template-columns: 1fr }
+  .acard .t { font-size: .88rem; padding: 12px 12px 22px }
+  .acard .t::after { left: 12px }
+  .acard:hover .t::after { width: calc(100% - 24px) }
+  .tile .caption { padding: 12px 14px }
+  .grid2 .tile .t, .tile.small .t { font-size: .9rem }
+  .sec { font-size: 1.3rem; margin: 34px 0 16px }
+  .band { margin-top: 36px; padding: 32px 0 44px }
+  .split { gap: 28px }
+  .foot { grid-template-columns: 1fr 1fr; gap: 28px 20px }
+  .foot > :first-child { grid-column: 1 / -1 }
+  .post h1 { font-size: 1.65rem }
+  .content { font-size: 1.05rem; line-height: 1.85 }
+  .content blockquote { padding: 22px 18px 22px 60px }
+  .content blockquote::before { left: 14px; font-size: 4rem }
+  .titlebar { flex-direction: column; align-items: flex-start; padding-block: 18px 12px }
+}
+@media (max-width: 360px) { .logo img { height: 48px } .hero .tile:nth-child(1) .t { font-size: 1.25rem } .acard .t { font-size: .82rem } }
+/* hover lifts stay on devices that can hover, so taps do not leave a card stuck raised */
+@media (hover: none) { .acard:hover, .vcard:hover, .pn a:hover, .thumbs li:hover, .ad:hover { transform: none } .tile:hover img { transform: none } }

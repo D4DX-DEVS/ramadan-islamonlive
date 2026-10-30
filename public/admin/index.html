@@ -164,6 +164,18 @@
   .login .card { padding: 34px 30px; border-top: 4px solid var(--gold); background: var(--card) linear-gradient(180deg, #e49b0f14, transparent 40%) }
   .login h1 { font-family: var(--serif); font-size: 1.7rem; font-weight: 800 }
   @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important } }
+
+  @media (max-width: 760px) {
+    .tab span:empty { display: none }
+    .tab { padding: 8px 10px }
+    .head h1 { font-size: 1.5rem }
+    main { padding: 18px 14px }
+    .row .t { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical }
+    .row { padding: 12px 14px }
+    .tools select { flex: 1 }
+    .btn { min-height: 42px }
+  }
+  @media (max-width: 880px) { .savebar { position: sticky; bottom: 0; background: var(--card); padding: 10px 0; z-index: 5 } }
 </style>
 </head>
 <body>
