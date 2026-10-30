@@ -5,11 +5,11 @@ import Placeholder from './Placeholder'
 export const href = (p: Post) => `/${p.category}/${p.slug}`
 
 /** Image with the title overlaid (hero / columns / zakat). */
-export async function Tile({ post, badge, className = '', priority }: { post: Post; badge?: boolean; className?: string; priority?: boolean }) {
+export async function Tile({ post, badge, className = '', priority, eager }: { post: Post; badge?: boolean; className?: string; priority?: boolean; eager?: boolean }) {
   const { categoryBySlug } = badge ? await db() : { categoryBySlug: () => undefined }
   return (
     <Link href={href(post)} className={`tile ${className}`}>
-      {post.image ? <img src={post.image} alt="" {...(priority ? { fetchPriority: 'high' as const } : { loading: 'lazy' as const })} /> : <Placeholder />}
+      {post.image ? <img src={post.image} alt="" {...(priority ? { fetchPriority: 'high' as const } : eager ? {} : { loading: 'lazy' as const })} /> : <Placeholder />}
       <span className="shade" />
       <span className="caption">
         {badge && <span className="badge">{categoryBySlug(post.category)?.name}</span>}

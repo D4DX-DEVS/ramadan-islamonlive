@@ -275,3 +275,25 @@ aside .sec { margin-top: 0 }
 .tile .ph img:first-child { filter: brightness(0) invert(1) }
 .tile:hover .ph img { transform: none }
 .tile .ph { padding-bottom: 36px }
+
+/* ui-audit fixes: contrast, minimum text size, tap targets, mobile byline */
+.badge, .tag, .skip { color: #06241a }
+.badge { font-size: .75rem }
+.tile .caption small { font-size: .78rem }
+.s-facebook { background: #1565c0 } .s-whatsapp { background: #0f7a3a } .s-telegram { background: #0b6fa4 }
+.pn small { color: var(--emerald) }
+.site-footer { font-size: .88rem }
+.site-footer a { color: var(--gold-hi) }
+.site-footer .admin-btn { font-size: .82rem }
+.foot-bar { font-size: .84rem }
+.share a, .share button { min-width: 36px; height: 36px }
+.tag { position: relative }
+.tag::after { content: ''; position: absolute; inset: -10px -4px }
+.chip { padding: 7px 14px }
+.crumbs a { padding: 10px 2px }
+.qa li { padding: 0 }
+.qa li::before { padding: 14px 0 14px 16px }
+.qa li a { display: block; flex: 1; padding: 14px 16px 14px 0 }
+.qa li:hover { padding-left: 0 }
+@media (pointer: coarse) { .share a, .share button { min-width: 44px; height: 44px } }
+@media (max-width: 560px) { .share { width: 100%; margin-left: 0 } .byline { row-gap: 12px } }

@@ -96,8 +96,7 @@ export default async function PostPage({ params }: Props) {
           <div className="byline">
             <span className="avatar" aria-hidden="true">{post.author.trim().charAt(0)}</span>
             <span className="who">{author ? <Link href={`/author/${author.slug}`}>{post.author}</Link> : post.author}</span>
-            <span className="dot">{fmtDate(post.date)}</span>
-            <span className="dot">{minutes} min read</span>
+            <span className="dot">{fmtDate(post.date)} · {minutes} min read</span>
             <Share url={url} title={decode(post.title)} />
           </div>
           {post.video ? (

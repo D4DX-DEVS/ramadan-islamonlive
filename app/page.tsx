@@ -26,7 +26,7 @@ export default async function Home() {
       ] }} />
       <h1 className="sr-only">Ramadan.Islamonlive.in: Malayalam Ramadan portal</h1>
       <section className="wrap hero">
-        {hero.map((p, i) => <Tile key={p.id} post={p} badge priority={i === 0} />)}
+        {hero.map((p, i) => <Tile key={p.id} post={p} badge priority={i === 0} eager />)}
       </section>
 
       <section className="wrap">
