@@ -1,12 +1,12 @@
 /* Laylat al-Qadr: deep night-emerald, antique gold, warm ivory. Serif headlines, scroll-driven motion. */
 :root {
-  --night: #07140f; --emerald: #0d3a2c; --emerald-2: #135240;
-  --gold: #d6a23c; --gold-hi: #f3d68c; --gold-lo: #9c7420;
-  --ivory: #fbf6ea; --paper: #fffdf7; --ink: #15120c; --mute: #6f685a; --line: #e6dcc3;
+  --night: #0b4a33; --emerald: #0b5d3b; --emerald-2: #0f6a45;
+  --gold: #e49b0f; --gold-hi: #f0b640; --gold-lo: #c98400;
+  --ivory: #f5f7f2; --paper: #ffffff; --ink: #1d1d1b; --mute: #666d65; --line: #e1e6dc;
   --orange: var(--gold); --band: var(--ivory);
   --serif: var(--font-serif), 'Noto Serif Malayalam', Georgia, serif;
   --ease: cubic-bezier(.2, .8, .2, 1);
-  --star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M36 6l6.5 15.5L58 28l-15.5 6.5L36 50l-6.5-15.5L14 28l15.5-6.5z' fill='none' stroke='%23d6a23c' stroke-opacity='.16' stroke-width='1'/%3E%3C/svg%3E");
+  --star: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cpath d='M36 6l6.5 15.5L58 28l-15.5 6.5L36 50l-6.5-15.5L14 28l15.5-6.5z' fill='none' stroke='%23e49b0f' stroke-opacity='.10' stroke-width='1'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box }
 html { scroll-behavior: smooth }
@@ -33,7 +33,7 @@ img { max-width: 100%; height: auto }
 @keyframes drop { from { opacity: 0; transform: translateY(-14px) } }
 
 .main-nav { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--night) 92%, transparent); backdrop-filter: blur(14px) saturate(1.4);
-  border-block: 1px solid #d6a23c55; box-shadow: 0 12px 30px -18px #000a }
+  border-block: 1px solid #e49b0f55; box-shadow: 0 12px 30px -18px #000a }
 .main-nav .wrap { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none }
 .main-nav a { position: relative; padding: 16px 18px; color: #e9e2cf; font-size: .86rem; font-weight: 700; letter-spacing: .04em; white-space: nowrap; transition: color .3s }
 .main-nav a::after { content: ''; position: absolute; left: 18px; right: 18px; bottom: 8px; height: 2px; background: linear-gradient(90deg, var(--gold-lo), var(--gold-hi)); transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s var(--ease) }
@@ -65,10 +65,10 @@ main { margin-top: 28px }
 @keyframes rise { from { opacity: 0; transform: translateY(32px) scale(.98) } }
 
 /* overlay tile */
-.tile { position: relative; display: block; overflow: hidden; border-radius: 6px; background: var(--night); aspect-ratio: 16/10; isolation: isolate; box-shadow: 0 18px 40px -22px #000c }
+.tile { position: relative; display: block; overflow: hidden; border-radius: 6px; background: var(--night); aspect-ratio: 16/10; isolation: isolate; box-shadow: 0 10px 24px -16px #0a2a1f99 }
 .tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 1.2s var(--ease), filter .6s }
 .tile:hover img { transform: scale(1.08); filter: saturate(1.15) }
-.tile .shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, #07140fe8 100%); transition: opacity .5s }
+.tile .shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, #0a2a1fe8 100%); transition: opacity .5s }
 .tile::after { content: ''; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--gold-lo), var(--gold-hi)); transform: scaleX(0); transform-origin: 0 50%; transition: transform .7s var(--ease) }
 .tile:hover::after { transform: scaleX(1) }
 .tile .caption { position: absolute; inset: auto 0 0 0; padding: 18px 20px; color: #fff; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; transition: transform .6s var(--ease) }
@@ -76,7 +76,7 @@ main { margin-top: 28px }
 .tile .t { font-family: var(--serif); font-size: 1.05rem; font-weight: 700; line-height: 1.4; text-wrap: balance; text-shadow: 0 2px 12px #0008 }
 .tile.big .t { font-size: 1.3rem }
 .tile.small { aspect-ratio: 16/10 }
-.badge { background: linear-gradient(135deg, var(--gold-hi), var(--gold)); color: var(--night); font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px }
+.badge { background: var(--gold); color: var(--night); font-size: .66rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 3px 10px; border-radius: 2px }
 
 /* image-on-top card */
 .acard { display: flex; flex-direction: column; position: relative; background: #fff; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); transition: transform .5s var(--ease), box-shadow .5s var(--ease), border-color .4s }
@@ -106,7 +106,7 @@ aside .sec { margin-top: 0 }
 .z { grid-area: z } .q { grid-area: q } .a { grid-area: a } .v { grid-area: v }
 .qa-img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; border-radius: 6px 6px 0 0 }
 .qa { list-style: none; margin: 0; padding: 0; background: var(--night); border-radius: 0 0 6px 6px; counter-reset: q }
-.qa li { counter-increment: q; display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #d6a23c30; font-family: var(--serif); font-size: .86rem; font-weight: 600; line-height: 1.45; color: #f4efe0; transition: background .3s, padding .4s var(--ease) }
+.qa li { counter-increment: q; display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #e49b0f30; font-family: var(--serif); font-size: .86rem; font-weight: 600; line-height: 1.45; color: #f4efe0; transition: background .3s, padding .4s var(--ease) }
 .qa li::before { content: counter(q, decimal-leading-zero); color: var(--gold); font-weight: 800; font-size: .78rem; padding-top: 2px }
 .qa li:hover { background: var(--emerald); padding-left: 24px }
 .qa li:last-child { border-bottom: 0; border-radius: 0 0 6px 6px }
@@ -124,14 +124,14 @@ aside .sec { margin-top: 0 }
 .site-footer .links a:hover { color: var(--gold-hi) }
 .site-footer p { margin: 0 }
 .site-footer a { color: var(--gold) }
-.site-footer .admin-btn { display: inline-block; margin-top: 18px; padding: 6px 20px; border: 1px solid #d6a23c80; border-radius: 99px; font-size: .74rem; letter-spacing: .08em; transition: background .3s, color .3s, transform .3s var(--ease) }
+.site-footer .admin-btn { display: inline-block; margin-top: 18px; padding: 6px 20px; border: 1px solid #e49b0f80; border-radius: 99px; font-size: .74rem; letter-spacing: .08em; transition: background .3s, color .3s, transform .3s var(--ease) }
 .site-footer .admin-btn:hover { background: var(--gold); color: var(--night); transform: translateY(-2px) }
 
 /* archive + post pages */
 .gray { background: var(--ivory) var(--star); padding-bottom: 72px; min-height: 60vh; margin-top: -28px; padding-top: 28px }
 .titlebar { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-block: 28px 20px; font-size: .8rem; color: var(--mute) }
 .titlebar h1 { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; line-height: 1.2; margin: 0; color: var(--night); animation: rise .9s var(--ease) both }
-.titlebar a:hover, .crumbs a:hover { color: var(--gold-lo) }
+.titlebar a:hover, .crumbs a:hover { color: var(--emerald) }
 .crumbs { padding-block: 22px 8px; font-size: .78rem; color: var(--mute) }
 .layout { display: grid; grid-template-columns: 2fr 1fr; gap: 32px; align-items: start }
 .list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px }
@@ -147,20 +147,20 @@ aside .sec { margin-top: 0 }
 .lp img { width: 100%; aspect-ratio: 16/10; object-fit: cover; display: block; border-radius: 6px; transition: transform .6s var(--ease), box-shadow .5s }
 .lp:hover img { transform: translateY(-3px); box-shadow: 0 16px 30px -18px #000a }
 .lp .t { display: block; font-family: var(--serif); font-size: .92rem; font-weight: 700; line-height: 1.45; margin-top: 10px; transition: color .3s }
-.lp:hover .t { color: var(--gold-lo) }
+.lp:hover .t { color: var(--emerald) }
 .lp small { color: var(--mute); font-size: .72rem }
 .post { padding: clamp(22px, 4vw, 48px); animation: rise .9s var(--ease) both }
 .post h1 { font-family: var(--serif); line-height: 1.35; margin: 16px 0 10px; font-size: clamp(1.7rem, 3.6vw, 2.5rem); font-weight: 800; color: var(--night); text-wrap: balance }
 .post .meta { font-size: .8rem; color: var(--mute); margin: 0 0 24px; letter-spacing: .03em }
-.post .meta a:hover { color: var(--gold-lo) }
+.post .meta a:hover { color: var(--emerald) }
 .post .video { width: 100%; aspect-ratio: 16/9; border: 0; display: block; margin: 0 0 28px; background: #000; border-radius: 8px }
 .post .hero-img { width: 100%; margin: 0 0 28px; display: block; border-radius: 8px; box-shadow: 0 24px 50px -28px #000b }
 .chip { display: inline-block; margin: 0 6px 8px 0; padding: 3px 14px; border: 1px solid var(--line); border-radius: 99px; font-size: .76rem; color: var(--ink); transition: all .3s var(--ease) }
 .chip:hover { background: var(--night); border-color: var(--night); color: var(--gold-hi); transform: translateY(-2px) }
 .intro { font-size: .9rem; color: var(--mute) }
-.tag { display: inline-block; background: linear-gradient(135deg, var(--gold-hi), var(--gold)); color: var(--night); padding: 3px 12px; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; border-radius: 2px }
+.tag { display: inline-block; background: var(--gold); color: var(--night); padding: 3px 12px; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; border-radius: 2px }
 .content { font-size: 1.12rem; line-height: 1.95; overflow-wrap: anywhere }
-.content a { color: var(--gold-lo); text-decoration: underline; text-decoration-color: #d6a23c80; text-underline-offset: 3px; transition: color .3s }
+.content a { color: var(--emerald); text-decoration: underline; text-decoration-color: #e49b0f80; text-underline-offset: 3px; transition: color .3s }
 .content a:hover { color: var(--night); text-decoration-color: var(--gold) }
 .content h2, .content h3, .content h4 { font-family: var(--serif); font-weight: 800; line-height: 1.4; color: var(--night); margin-top: 2em }
 .content blockquote { margin: 1.6em 0; padding: 6px 0 6px 22px; border-left: 3px solid var(--gold); font-family: var(--serif); font-size: 1.15em; color: var(--emerald-2) }

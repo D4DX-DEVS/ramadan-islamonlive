@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description: 'The one and only Comprehensive Ramadan portal in Malayalam',
 }
 
-export const viewport: Viewport = { themeColor: '#07140f' }
+export const viewport: Viewport = { themeColor: '#0b4a33' }
 
 const nav = [
   ['Home', '/'],
