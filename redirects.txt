@@ -143,3 +143,5 @@
 /video-category/naseehat/ / 301
 /feed /feed.xml 301
 /feed/ /feed.xml 301
+# Old WordPress image links: the same year/month paths now live under /uploads.
+/wp-content/uploads/* /uploads/:splat 301
