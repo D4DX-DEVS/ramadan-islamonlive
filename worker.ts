@@ -147,9 +147,15 @@ async function warm(env: Env, ctx: ExecutionContext) {
 }
 
 // Search engines must only index the real domain. Every other address that serves this Worker (workers.dev, a staging
-// name) answers robots.txt with "disallow all" and marks pages noindex. The domain forwarder sets x-forwarded-host.
+// name) answers robots.txt with "disallow all" and marks pages noindex. The domain forwarder sets x-forwarded-host, or Cloudflare marks it with cf-worker.
 function offDomain(request: Request, env: Env, url: URL) {
-  return (request.headers.get("x-forwarded-host") ?? url.host) !== new URL(env.SITE_URL).host;
+  const site = new URL(env.SITE_URL).host;
+  const forwarded = request.headers.get("x-forwarded-host");
+  if (forwarded) return forwarded !== site;
+  // Cloudflare adds cf-worker (the zone) when another Worker makes the request: the islamonlive.in forwarder, which does not send x-forwarded-host
+  const zone = request.headers.get("cf-worker");
+  if (zone && (site === zone || site.endsWith(`.${zone}`))) return false;
+  return url.host !== site;
 }
 
 async function route(request: Request, env: Env, ctx: ExecutionContext, url: URL): Promise<Response> {
